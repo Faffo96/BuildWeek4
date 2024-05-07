@@ -5,7 +5,9 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(name = "services")
 public abstract class Service {
 
     @Id
@@ -13,7 +15,6 @@ public abstract class Service {
     protected Long id;
 
     protected LocalDate purchaseDate;
-    protected LocalDate expirationDate;
     protected boolean validity = true;
 
     @ManyToOne
@@ -21,10 +22,8 @@ public abstract class Service {
     protected Seller seller;
 
 
-    public Service(LocalDate expirationDate, boolean validity, Seller seller) {
+    public Service(Seller seller) {
         this.purchaseDate = LocalDate.now();
-        this.expirationDate = expirationDate;
-        this.validity = validity;
         this.seller = seller;
     }
 
@@ -45,14 +44,6 @@ public abstract class Service {
 
     public void setPurchaseDate(LocalDate purchaseDate) {
         this.purchaseDate = purchaseDate;
-    }
-
-    public LocalDate getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(LocalDate expirationDate) {
-        this.expirationDate = expirationDate;
     }
 
     public boolean isValidity() {

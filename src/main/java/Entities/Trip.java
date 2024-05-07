@@ -1,7 +1,9 @@
 package Entities;
 
 import javax.persistence.*;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "trips")
@@ -16,21 +18,19 @@ public class Trip {
     private Vehicle vehicle;
 
     @JoinColumn(name = "start_trip")
-    private LocalDate startTrip;
+    private LocalDateTime startTrip;
 
     @JoinColumn(name = "end_trip")
-    private LocalDate endTrip;
+    private LocalDateTime endTrip;
 
-    private LocalDate duration;
+    private Duration duration;
 
+    @OneToOne
     private Route route;
 
-    public Trip(int tripId, Vehicle vehicle, LocalDate startTrip, LocalDate endTrip, LocalDate duration, Route route) {
-        this.tripId = tripId;
+    public Trip(Vehicle vehicle, Route route) {
         this.vehicle = vehicle;
-        this.startTrip = startTrip;
-        this.endTrip = endTrip;
-        this.duration = duration;
+        this.startTrip = LocalDateTime.now();
         this.route = route;
     }
 
@@ -54,27 +54,27 @@ public class Trip {
         this.vehicle = vehicle;
     }
 
-    public LocalDate getStartTrip() {
+    public LocalDateTime getStartTrip() {
         return startTrip;
     }
 
-    public void setStartTrip(LocalDate startTrip) {
+    public void setStartTrip(LocalDateTime startTrip) {
         this.startTrip = startTrip;
     }
 
-    public LocalDate getEndTrip() {
+    public LocalDateTime getEndTrip() {
         return endTrip;
     }
 
-    public void setEndTrip(LocalDate endTrip) {
+    public void setEndTrip(LocalDateTime endTrip) {
         this.endTrip = endTrip;
     }
 
-    public LocalDate getDuration() {
+    public Duration getDuration() {
         return duration;
     }
 
-    public void setDuration(LocalDate duration) {
+    public void setDuration(Duration duration) {
         this.duration = duration;
     }
 

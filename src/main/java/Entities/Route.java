@@ -20,9 +20,9 @@ public class Route {
     @OneToMany
     private List<Vehicle> vehicles;
 
-    private LocalDate duration;
+    private int duration;
 
-    public Route(String startLocation, String endLocation, LocalDate duration) {
+    public Route(String startLocation, String endLocation, int duration) {
         this.startLocation = startLocation;
         this.endLocation = endLocation;
         this.duration = duration;
@@ -56,11 +56,11 @@ public class Route {
         this.endLocation = endLocation;
     }
 
-    public LocalDate getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(LocalDate duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 }

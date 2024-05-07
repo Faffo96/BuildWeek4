@@ -1,15 +1,16 @@
 package Entities.Sellers;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "vending_machines")
 public class VendingMachine extends Seller {
-    private boolean state;
+    private boolean operative;
 
-    public VendingMachine(int sellerId, boolean state) {
-        super(sellerId);
-        this.state = state;
-    }
-
-    public VendingMachine(boolean state) {
-        this.state = state;
+    public VendingMachine(boolean operative) {
+        super();
+        this.operative = operative;
     }
 
     public VendingMachine(){
@@ -17,10 +18,10 @@ public class VendingMachine extends Seller {
     }
 
     public boolean isState() {
-        return state;
+        return operative;
     }
 
-    public void setState(boolean state) {
-        this.state = state;
+    public void setState(boolean operative) {
+        this.operative = operative;
     }
 }
