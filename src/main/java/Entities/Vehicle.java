@@ -15,7 +15,7 @@ public class Vehicle {
 
     private int capacity;
 
-    @Enumerated
+    @Enumerated (EnumType.STRING)
     @Column(name = "vehicle_type")
     private VehicleType vehicleType;
 
