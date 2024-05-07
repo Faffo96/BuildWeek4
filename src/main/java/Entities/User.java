@@ -1,7 +1,7 @@
 package Entities;
 
-import Entities.Tickets.Subscription;
-import Entities.Tickets.Ticket;
+import Entities.Services.Subscription;
+import Entities.Services.Ticket;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,13 +17,14 @@ public class User {
 
     private String lastName;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne (mappedBy = "user")
     private Card card;
 
-    @OneToOne
-    @JoinColumn(name = "card")
+    @OneToOne (mappedBy = "user")
     private Subscription subscription;
+
+    @OneToMany (mappedBy = "user")
+    private List<Ticket> tickets;
 
 
     public User() {

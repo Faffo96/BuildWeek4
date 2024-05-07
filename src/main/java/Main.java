@@ -1,13 +1,13 @@
 import Dao.*;
 import Dao.SellerDao.ShopDao;
 import Dao.SellerDao.VendingMachineDao;
-import Dao.TicketsDao.SubscriptionDao;
-import Dao.TicketsDao.TicketDao;
+import Dao.ServicesDao.SubscriptionDao;
+import Dao.ServicesDao.TicketDao;
 import Entities.*;
 import Entities.Sellers.Shop;
 import Entities.Sellers.VendingMachine;
-import Entities.Tickets.Subscription;
-import Entities.Tickets.Ticket;
+import Entities.Services.Subscription;
+import Entities.Services.Ticket;
 import enums.SubscriptionDuration;
 import enums.VehicleType;
 
@@ -25,8 +25,8 @@ public class Main {
         SubscriptionDao subscriptionDao = new SubscriptionDao(em);
         TicketDao ticketDao = new TicketDao(em);
         CardDao cardsDao = new CardDao(em);
-        RoutesDao routesDao = new RoutesDao(em);
-        VehiclesDao vehiclesDao = new VehiclesDao(em);
+        RouteDao routeDao = new RouteDao(em);
+        VehicleDao vehicleDao = new VehicleDao(em);
         TripDao tripDao = new TripDao(em);
         VehicleStateDao vehicleStateDao = new VehicleStateDao(em);
 
@@ -50,9 +50,9 @@ public class Main {
         subscriptionDao.save(subscription1);
         ticketDao.save(ticket1);
         cardsDao.save(card1);
-        routesDao.save(route1);
-        vehiclesDao.save(vehicle1);
-        vehiclesDao.save(vehicle2);
+        routeDao.save(route1);
+        vehicleDao.save(vehicle1);
+        vehicleDao.save(vehicle2);
         tripDao.save(trip1);
         vehicleStateDao.save(vehicleState1);
 

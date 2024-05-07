@@ -1,6 +1,6 @@
 package Entities;
 
-import Entities.Tickets.Ticket;
+import Entities.Services.Ticket;
 import enums.VehicleType;
 
 import javax.persistence.*;
@@ -11,22 +11,23 @@ import java.util.List;
 public class Vehicle {
     @Id
     @GeneratedValue
-    @JoinColumn(name = "vehicle_id")
     private int vehicleId;
+
     private int capacity;
 
     @Enumerated
-    @JoinColumn(name = "vehicle_type")
+    @Column(name = "vehicle_type")
     private VehicleType vehicleType;
 
     @OneToMany
     private List<Ticket> ticket;
 
     @ManyToOne
+    @JoinColumn(name = "route_id")
     private Route route;
 
-    @OneToMany
-    private List<Trip> trip;
+    @OneToMany(mappedBy = "vehicle")
+    private List<Trip> trips;
 
     @OneToMany
     private List<VehicleState> vehicleState;
@@ -81,12 +82,12 @@ public class Vehicle {
         this.route = route;
     }
 
-    public List<Trip> getTrip() {
-        return trip;
+    public List<Trip> getTrips() {
+        return trips;
     }
 
-    public void setTrip(List<Trip> trip) {
-        this.trip = trip;
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
     }
 
     public List<VehicleState> getVehicleState() {
