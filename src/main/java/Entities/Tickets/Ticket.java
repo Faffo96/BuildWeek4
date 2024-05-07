@@ -15,13 +15,16 @@ public class Ticket extends Service {
     @ManyToOne
     private User user;
 
-    public Ticket() {
+    private boolean validity = true;
+
+
+
+    public Ticket(Seller seller, User user) {
+        super(seller);
+        this.user = user;
     }
 
-    public Ticket(LocalDate expirationDate, boolean validity, Seller seller, LocalDate stampDate, User user) {
-        super(expirationDate, validity, seller);
-        this.stampDate = stampDate;
-        this.user = user;
+    public Ticket() {
     }
 
     public LocalDate getStampDate() {

@@ -5,10 +5,10 @@ import Entities.Card;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-public class CardsDao {
+public class CardDao {
     private EntityManager em;
 
-    public CardsDao(EntityManager em) {
+    public CardDao(EntityManager em) {
         this.em = em;
     }
 

@@ -31,14 +31,10 @@ public class Vehicle {
     @OneToMany
     private List<VehicleState> vehicleState;
 
-    public Vehicle(int vehicleId, int capacity, VehicleType vehicleType, List<Ticket> ticket, Route route, List<Trip> trip, List<VehicleState> vehicleState) {
-        this.vehicleId = vehicleId;
+    public Vehicle(int capacity, VehicleType vehicleType, Route route) {
         this.capacity = capacity;
         this.vehicleType = vehicleType;
-        this.ticket = ticket;
         this.route = route;
-        this.trip = trip;
-        this.vehicleState = vehicleState;
     }
 
     public Vehicle(){

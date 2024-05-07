@@ -23,11 +23,9 @@ public class VehicleState {
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
-    public VehicleState(int vehicleStateId, boolean underMaintenance, LocalDate startState, LocalDate endState, Vehicle vehicle) {
-        this.vehicleStateId = vehicleStateId;
+    public VehicleState(boolean underMaintenance, Vehicle vehicle) {
         this.underMaintenance = underMaintenance;
-        this.startState = startState;
-        this.endState = endState;
+        this.startState = LocalDate.now();
         this.vehicle = vehicle;
     }
 

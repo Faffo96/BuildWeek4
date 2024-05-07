@@ -7,16 +7,20 @@ import java.time.LocalDate;
 @Table(name = "cards")
 public class Card {
 
+    @Id
+    @GeneratedValue
+    @JoinColumn(name = "card_id")
+    private int cardId;
     @OneToOne
     @JoinColumn(name = "card")
     private User user;
     private LocalDate subscriptionDate ;
     private LocalDate expireDate ;
 
-    public Card(User user, LocalDate subscriptionDate, LocalDate expireDate) {
+    public Card(User user) {
         this.user = user;
-        this.subscriptionDate = subscriptionDate;
-        this.expireDate = expireDate;
+        this.subscriptionDate = LocalDate.now();
+        this.expireDate = subscriptionDate.plusDays(365);
     }
 
     public Card() {
