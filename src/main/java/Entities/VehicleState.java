@@ -8,15 +8,14 @@ import java.time.LocalDate;
 public class VehicleState {
     @Id
     @GeneratedValue
-    @JoinColumn(name = "vehicle_state_id")
-    private int vehicleStateId;
+    private Long vehicleStateId;
 
-    @JoinColumn(name = "under_maintenance")
+    @Column(name = "under_maintenance")
     private boolean underMaintenance;
 
-    @JoinColumn(name = "start_state")
+    @Column(name = "start_state")
     private LocalDate startState;
-    @JoinColumn(name = "end_state")
+    @Column(name = "end_state")
     private LocalDate endState;
 
     @ManyToOne
@@ -33,11 +32,11 @@ public class VehicleState {
 
     }
 
-    public int getVehicleStateId() {
+    public Long getVehicleStateId() {
         return vehicleStateId;
     }
 
-    public void setVehicleStateId(int vehicleStateId) {
+    public void setVehicleStateId(Long vehicleStateId) {
         this.vehicleStateId = vehicleStateId;
     }
 

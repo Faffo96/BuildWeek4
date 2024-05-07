@@ -9,10 +9,10 @@ public class Card {
 
     @Id
     @GeneratedValue
-    @JoinColumn(name = "card_id")
     private int cardId;
+
     @OneToOne
-    @JoinColumn(name = "card")
+    @JoinColumn(name = "user_id")
     private User user;
     private LocalDate subscriptionDate ;
     private LocalDate expireDate ;

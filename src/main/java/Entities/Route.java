@@ -9,15 +9,14 @@ import java.util.List;
 public class Route {
     @Id
     @GeneratedValue
-    @JoinColumn(name = "route_id")
-    private int routeId;
+    private Long routeId;
 
-    @JoinColumn(name = "start_location")
+    @Column(name = "start_location")
     private String startLocation;
-    @JoinColumn(name = "end_location")
+    @Column(name = "end_location")
     private String endLocation;
 
-    @OneToMany
+    @OneToMany(mappedBy = "route")
     private List<Vehicle> vehicles;
 
     private int duration;
@@ -28,15 +27,15 @@ public class Route {
         this.duration = duration;
     }
 
-    public Route(){
+    public Route() {
 
     }
 
-    public int getRouteId() {
+    public Long getRouteId() {
         return routeId;
     }
 
-    public void setRouteId(int routeId) {
+    public void setRouteId(Long routeId) {
         this.routeId = routeId;
     }
 

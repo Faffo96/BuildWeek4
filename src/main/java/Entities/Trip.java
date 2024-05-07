@@ -2,7 +2,6 @@ package Entities;
 
 import javax.persistence.*;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -10,22 +9,22 @@ import java.time.LocalDateTime;
 public class Trip {
     @Id
     @GeneratedValue
-    @JoinColumn(name = "trip_id")
-    private int tripId;
+    private Long tripId;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
-    @JoinColumn(name = "start_trip")
+    @Column(name = "start_trip")
     private LocalDateTime startTrip;
 
-    @JoinColumn(name = "end_trip")
+    @Column(name = "end_trip")
     private LocalDateTime endTrip;
 
     private Duration duration;
 
     @OneToOne
+    @JoinColumn (name = "route_id")
     private Route route;
 
     public Trip(Vehicle vehicle, Route route) {
@@ -38,11 +37,11 @@ public class Trip {
 
     }
 
-    public int getTripId() {
+    public Long getTripId() {
         return tripId;
     }
 
-    public void setTripId(int tripId) {
+    public void setTripId(Long tripId) {
         this.tripId = tripId;
     }
 
