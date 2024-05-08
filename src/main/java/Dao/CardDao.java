@@ -1,6 +1,7 @@
 package Dao;
 
 import Entities.Card;
+import Entities.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -34,5 +35,10 @@ public class CardDao {
             System.out.println("Tessera non trovata");
         }
         et.commit();
+    }
+
+    public void buyCard(User user) {
+        Card card = new Card(user);
+        save(card);
     }
 }

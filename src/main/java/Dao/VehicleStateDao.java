@@ -4,6 +4,8 @@ import Entities.VehicleState;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 public class VehicleStateDao {
     private EntityManager em;
@@ -36,6 +38,25 @@ public class VehicleStateDao {
         et.commit();
     }
 
+    public List<VehicleState> getOperationalPeriodsByVehicleId(Long vehicleId) {
+        String jpql = "SELECT vs FROM VehicleState vs " +
+                "WHERE vs.vehicle.vehicleId = :vehicleId " +
+                "AND vs.underMaintenance = false";
 
+        TypedQuery<VehicleState> query = em.createQuery(jpql, VehicleState.class);
+        query.setParameter("vehicleId", vehicleId);
 
+        return query.getResultList();
+    }
+
+    public List<VehicleState> getMaintenancePeriodsByVehicleId(Long vehicleId) {
+        String jpql = "SELECT vs FROM VehicleState vs " +
+                "WHERE vs.vehicle.vehicleId = :vehicleId " +
+                "AND vs.underMaintenance = true";
+
+        TypedQuery<VehicleState> query = em.createQuery(jpql, VehicleState.class);
+        query.setParameter("vehicleId", vehicleId);
+
+        return query.getResultList();
+    }
 }
