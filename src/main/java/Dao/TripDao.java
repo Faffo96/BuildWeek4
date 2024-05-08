@@ -1,6 +1,8 @@
 package Dao;
 
+import Entities.Route;
 import Entities.Trip;
+import Entities.Vehicle;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -34,5 +36,10 @@ public class TripDao {
             System.out.println("Viaggio non trovato");
         }
         et.commit();
+    }
+
+    public void createTrip(Vehicle vehicle, Route route){
+        Trip trip = new Trip(vehicle,route);
+        save(trip);
     }
 }

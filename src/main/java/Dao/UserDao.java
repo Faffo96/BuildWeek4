@@ -35,4 +35,10 @@ public class UserDao {
         }
         et.commit();
     }
+
+    public void createUser(String name,String surname){
+        EntityTransaction et = em.getTransaction();
+        User user = new User(name,surname);
+        save(user);
+    }
 }
