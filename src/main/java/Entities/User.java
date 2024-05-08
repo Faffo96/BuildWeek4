@@ -20,9 +20,6 @@ public class User {
     @OneToOne (mappedBy = "user")
     private Card card;
 
-    @OneToOne (mappedBy = "user")
-    private Subscription subscription;
-
     @OneToMany (mappedBy = "user")
     private List<Ticket> tickets;
 
@@ -51,6 +48,14 @@ public class User {
         this.name = name;
     }
 
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
     public String getLastName() {
         return lastName;
     }
@@ -67,15 +72,6 @@ public class User {
         this.card = card;
     }
 
-
-    public Subscription getSubscription() {
-        return subscription;
-    }
-
-    public void setSubscription(Subscription subscription) {
-        this.subscription = subscription;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -83,7 +79,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", card=" + card +
-                ", subscription=" + subscription +
+                ", subscription=" +
                 '}';
     }
 }

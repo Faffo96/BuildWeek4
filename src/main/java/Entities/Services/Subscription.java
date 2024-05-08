@@ -1,5 +1,6 @@
 package Entities.Services;
 
+import Entities.Card;
 import Entities.Sellers.Seller;
 import Entities.User;
 import enums.SubscriptionDuration;
@@ -14,14 +15,13 @@ public class Subscription extends Service{
     @Enumerated
     private SubscriptionDuration subscriptionDuration;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @OneToOne (mappedBy = "subscription")
+    private Card card;
 
     @Column(name = "expiration_date")
     private LocalDate expirationDate;
 
-    public Subscription(Seller seller, SubscriptionDuration subscriptionDuration, User user) {
+    public Subscription(Seller seller, SubscriptionDuration subscriptionDuration, Card card) {
         super(seller);
         if (subscriptionDuration == subscriptionDuration.WEEKLY) {
             this.expirationDate = purchaseDate.plusDays(7);
@@ -29,7 +29,7 @@ public class Subscription extends Service{
             this.expirationDate = purchaseDate.plusDays(30);
         }
         this.subscriptionDuration = subscriptionDuration;
-        this.user = user;
+        this.card = card;
     }
 
     public Subscription() {
@@ -44,11 +44,11 @@ public class Subscription extends Service{
         this.subscriptionDuration = subscriptionDuration;
     }
 
-    public User getUser() {
-        return user;
+    public Card getCard() {
+        return card;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCard(Card card) {
+        this.card = card;
     }
 }

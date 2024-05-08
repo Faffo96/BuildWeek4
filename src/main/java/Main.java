@@ -30,31 +30,39 @@ public class Main {
         TripDao tripDao = new TripDao(em);
         VehicleStateDao vehicleStateDao = new VehicleStateDao(em);
 
+        /*Shop shop1 = new Shop("Via Roma");
+        shopDao.save(shop1);
 
-
-        Shop shop1 = new Shop("Via Roma");
         VendingMachine vending1 = new VendingMachine(true);
+        vendingMachineDao.save(vending1);
+
         User user1 = new User("Mario", "Rossi");
-        Subscription subscription1 = new Subscription(vending1, SubscriptionDuration.WEEKLY, user1);
-        Ticket ticket1 = new Ticket(shop1, user1);
+        userDao.save(user1);
+
         Card card1 = new Card(user1);
+        cardsDao.save(card1);
+
+        Subscription subscription1 = new Subscription(vending1, SubscriptionDuration.WEEKLY, card1);
+        subscriptionDao.save(subscription1);
+        card1.setSubscription(subscription1);
+        cardsDao.save(card1);
+
+        Ticket ticket1 = new Ticket(shop1, user1);
+        ticketDao.save(ticket1);
+
         Route route1 = new Route("Via Roma", "Via via da questa via", 15);
+        routeDao.save(route1);
+
         Vehicle vehicle1 = new Vehicle(50, VehicleType.BUS, route1);
         Vehicle vehicle2 = new Vehicle(50, VehicleType.TRAM, route1);
-        Trip trip1 = new Trip(vehicle1, route1);
-        VehicleState vehicleState1 = new VehicleState(true, vehicle2);
-
-        shopDao.save(shop1);
-        vendingMachineDao.save(vending1);
-        userDao.save(user1);
-        subscriptionDao.save(subscription1);
-        ticketDao.save(ticket1);
-        cardsDao.save(card1);
-        routeDao.save(route1);
         vehicleDao.save(vehicle1);
         vehicleDao.save(vehicle2);
+
+        Trip trip1 = new Trip(vehicle1, route1);
         tripDao.save(trip1);
-        vehicleStateDao.save(vehicleState1);
+
+        VehicleState vehicleState1 = new VehicleState(true, vehicle2);
+        vehicleStateDao.save(vehicleState1);*/
 
 
     }
