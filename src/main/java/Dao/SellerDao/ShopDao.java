@@ -35,4 +35,9 @@ public class ShopDao {
         }
         et.commit();
     }
+
+    public void createShop(String address) {
+        Shop shop = new Shop(address);
+        save(shop);
+    }
 }

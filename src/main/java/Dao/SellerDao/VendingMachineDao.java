@@ -1,5 +1,6 @@
 package Dao.SellerDao;
 
+import Entities.Sellers.Shop;
 import Entities.Sellers.VendingMachine;
 
 import javax.persistence.EntityManager;
@@ -34,5 +35,10 @@ public class VendingMachineDao {
             System.out.println("non trovato");
         }
         et.commit();
+    }
+
+    public void createVendingMachine(boolean operative) {
+        VendingMachine vendingMachine = new VendingMachine(operative);
+        save(vendingMachine);
     }
 }

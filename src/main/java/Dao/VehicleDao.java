@@ -4,6 +4,8 @@ import Entities.Vehicle;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 public class VehicleDao {
     private EntityManager em;
@@ -34,5 +36,11 @@ public class VehicleDao {
             System.out.println("Veicolo non disponibile");
         }
         et.commit();
+    }
+
+    public List<Vehicle> getAvailableVehicles() {
+        String jpql = "SELECT v FROM Vehicle v WHERE v.route IS NULL";
+        TypedQuery<Vehicle> query = em.createQuery(jpql, Vehicle.class);
+        return query.getResultList();
     }
 }
