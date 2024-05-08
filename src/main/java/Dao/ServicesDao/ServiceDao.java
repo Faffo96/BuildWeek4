@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 public class ServiceDao {
-    private EntityManager em;
+    private static EntityManager em;
 
     public ServiceDao(EntityManager em) {
         this.em = em;
@@ -35,4 +35,14 @@ public class ServiceDao {
         }
         et.commit();
     }
+
+    public static void purchaseService (Long sellerId, Long cardId, Long userId) {
+        if (cardId != null) {
+            SubscriptionDao.purchaseSubscription(sellerId, cardId);
+        } else {
+            TicketDao.purchaseTicket(sellerId, userId);
+        }
+    }
+
+
 }
