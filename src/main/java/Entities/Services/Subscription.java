@@ -51,4 +51,6 @@ public class Subscription extends Service{
     public void setCard(Card card) {
         this.card = card;
     }
+
+
 }

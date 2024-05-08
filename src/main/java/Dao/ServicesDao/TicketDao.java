@@ -1,12 +1,16 @@
 package Dao.ServicesDao;
 
+import Entities.Sellers.Seller;
 import Entities.Services.Ticket;
+import Entities.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+import java.time.LocalDate;
 
 public class TicketDao {
-    private EntityManager em;
+    private static EntityManager em;
 
     public TicketDao(EntityManager em) {
         this.em = em;
@@ -35,4 +39,43 @@ public class TicketDao {
         }
         et.commit();
     }
+
+    public static void purchaseTicket(Long sellerId, Long userId) {
+        EntityTransaction transaction = em.getTransaction();
+
+        try {
+            transaction.begin();
+
+            Ticket ticket = new Ticket();
+            ticket.setSeller(em.find(Seller.class, sellerId));
+            ticket.setUser(em.find(User.class, userId));
+
+            em.persist(ticket);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
+    public static int checkStampedTickets(LocalDate startDate, LocalDate endDate, Integer vehicleId) {
+        if (vehicleId != null) {
+            Query query = em.createQuery("SELECT COUNT(t) FROM VehiclesTickets vt WHERE vt.vehicle_vehicleid = :vehicleId");
+            query.setParameter("vehicleId", vehicleId);
+            return ((int) query.getSingleResult());
+        }
+        else {
+            Query query = em.createQuery("SELECT COUNT(t) FROM Tickets t WHERE t.stampdate BETWEEN :startDate AND :endDate");
+            query.setParameter("startDate", startDate);
+            query.setParameter("endDate", endDate);
+            return ((int) query.getSingleResult());
+        }
+    }
+
+
+
 }

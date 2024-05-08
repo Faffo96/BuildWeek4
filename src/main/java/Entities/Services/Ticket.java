@@ -23,10 +23,6 @@ public class Ticket extends Service {
 
     private boolean validity = true;
 
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("bus");
-    EntityManager em = emf.createEntityManager();
-    UserDao userDao = new UserDao(em);
-
     public Ticket(Seller seller, User user) {
         super(seller);
         this.user = user;
@@ -51,12 +47,5 @@ public class Ticket extends Service {
         this.user = user;
     }
 
-    public void buyTicket(int quantity) {
-        List<Ticket> tickets = new ArrayList<>();
-        for (int i = 0; i < quantity; i++) {
-            tickets.add(new Ticket(seller, user));
-        }
-        user.setTickets(tickets);
-        userDao.save(user);
-    }
+
 }
