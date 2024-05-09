@@ -1,5 +1,6 @@
 package Dao;
 
+import Entities.Vehicle;
 import Entities.VehicleState;
 
 import javax.persistence.EntityManager;
@@ -8,7 +9,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class VehicleStateDao {
-    private EntityManager em;
+    private static EntityManager em;
 
     public VehicleStateDao(EntityManager em) {
         this.em = em;
@@ -59,4 +60,37 @@ public class VehicleStateDao {
 
         return query.getResultList();
     }
+
+    public static void updateVehicleMaintenanceStatus(int vehicleId, boolean underMaintenance) {
+        EntityTransaction et = em.getTransaction();
+        try {
+            et.begin();
+            VehicleState vehicleState = em.find(VehicleState.class, vehicleId);
+            if (vehicleState != null) {
+                vehicleState.setUnderMaintenance(underMaintenance);
+                em.merge(vehicleState);
+                et.commit();
+            } else {
+                System.out.println("Id del veicolo non trovato: " + vehicleId);
+            }
+        } catch (Exception e) {
+            if (et != null) {
+                et.rollback();
+            }
+        }
+    }
+
+    public static boolean getVehicleState(Vehicle vehicle) {
+        String jpql = "SELECT vs.underMaintenance FROM VehicleState vs " +
+                "WHERE vs.vehicle = :vehicle " +
+                "ORDER BY vs.startState DESC";
+
+        TypedQuery<Boolean> query = em.createQuery(jpql, Boolean.class);
+        query.setParameter("vehicle", vehicle);
+        query.setMaxResults(1);
+
+        List<Boolean> results = query.getResultList();
+        return !results.isEmpty() ? results.get(0) : false;
+    }
+
 }

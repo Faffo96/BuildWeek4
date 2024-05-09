@@ -7,13 +7,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 public class CardDao {
-    private EntityManager em;
+    private static EntityManager em;
 
     public CardDao(EntityManager em) {
         this.em = em;
     }
 
-    public void save(Card card){
+    public static void save(Card card){
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(card);

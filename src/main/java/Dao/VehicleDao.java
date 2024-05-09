@@ -23,7 +23,7 @@ public class VehicleDao {
         et.commit();
     }
 
-    public Vehicle getById(int id){
+    public static Vehicle getById(int id){
         return em.find(Vehicle.class, id);
     }
 
@@ -58,7 +58,11 @@ public class VehicleDao {
         }
     }
 
-
+    public static List<Vehicle> getAllVehicles() {
+        String jpql = "SELECT v FROM Vehicle";
+        TypedQuery<Vehicle> query = em.createQuery(jpql, Vehicle.class);
+        return query.getResultList();
+    }
 
 
 }

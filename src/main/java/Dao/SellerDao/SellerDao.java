@@ -1,6 +1,7 @@
 package Dao.SellerDao;
 
 import Entities.Sellers.Seller;
+import Entities.Services.Service;
 import Entities.Services.Subscription;
 import Entities.Services.Ticket;
 import enums.VehicleType;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SellerDao {
-    private EntityManager em;
+    private static EntityManager em;
 
     public SellerDao(EntityManager em) {
         this.em = em;
@@ -44,41 +45,43 @@ public class SellerDao {
         et.commit();
     }
 
-    public Map<Seller, Integer> soldServices(LocalDate startDate, LocalDate endDate) {
-        Map<Seller, Integer> soldServicesMap = new HashMap<>();
+    public static Map<Seller, Map<String, Integer>> soldServices(LocalDate startDate, LocalDate endDate, int serviceTypeChoice, int sellerTypeChoice) {
+        Map<Seller, Map<String, Integer>> soldServicesMap = new HashMap<>();
 
-        //ticket venduti nell'intervallo di tempo
-        TypedQuery<Ticket> ticketQuery = em.createQuery(
-                "SELECT t FROM Ticket t WHERE t.stampDate BETWEEN :startDate AND :endDate", Ticket.class);
-        ticketQuery.setParameter("startDate", startDate);
-        ticketQuery.setParameter("endDate", endDate);
-
-        //abbonamenti venduti nell'intervallo di tempo
-        TypedQuery<Subscription> subscriptionQuery = em.createQuery(
-                "SELECT s FROM Subscription s WHERE s.purchaseDate BETWEEN :startDate AND :endDate", Subscription.class);
-        subscriptionQuery.setParameter("startDate", startDate);
-        subscriptionQuery.setParameter("endDate", endDate);
-
-        List<Ticket> tickets = ticketQuery.getResultList();
-        System.out.println("Ticket venduti:");
-        for (Ticket ticket : tickets) {
-            Seller seller = ticket.getSeller();
-            soldServicesMap.put(seller, soldServicesMap.getOrDefault(seller, 0) + 1);
+        //query in base ai parametri ricevuti
+        StringBuilder queryBuilder = new StringBuilder("SELECT s FROM Service s WHERE s.purchaseDate BETWEEN :startDate AND :endDate");
+        if (serviceTypeChoice != 3) {
+            queryBuilder.append(" AND (s INSTANCE OF ");
+            if (serviceTypeChoice == 1) {
+                queryBuilder.append("Ticket");
+            } else {
+                queryBuilder.append("Subscription");
+            }
+            queryBuilder.append(")");
+        }
+        if (sellerTypeChoice != 3) {
+            queryBuilder.append(" AND (");
+            if (sellerTypeChoice == 1) {
+                queryBuilder.append("s.seller INSTANCE OF Shop");
+            } else {
+                queryBuilder.append("s.seller INSTANCE OF VendingMachine");
+            }
+            queryBuilder.append(")");
         }
 
-        List<Subscription> subscriptions = subscriptionQuery.getResultList();
-        System.out.println("Sottoscrizioni vendute:");
-        for (Subscription subscription : subscriptions) {
-            Seller seller = subscription.getSeller();
-            soldServicesMap.put(seller, soldServicesMap.getOrDefault(seller, 0) + 1);
-        }
+        TypedQuery<Service> serviceQuery = em.createQuery(queryBuilder.toString(), Service.class);
+        serviceQuery.setParameter("startDate", startDate);
+        serviceQuery.setParameter("endDate", endDate);
 
-        // stampa
-        System.out.println("Servizi venduti:");
-        for (Map.Entry<Seller, Integer> entry : soldServicesMap.entrySet()) {
-            System.out.println("Venditore: " + entry.getKey().getSellerId() + ", Servizi venduti: " + entry.getValue());
+        List<Service> services = serviceQuery.getResultList();
+        for (Service service : services) {
+            Seller seller = service.getSeller();
+            String serviceType = (service instanceof Ticket) ? "Ticket" : "Subscription";
+            soldServicesMap.putIfAbsent(seller, new HashMap<>());
+            Map<String, Integer> sellerServices = soldServicesMap.get(seller);
+            sellerServices.put(serviceType, sellerServices.getOrDefault(serviceType, 0) + 1);
         }
-
         return soldServicesMap;
     }
+
 }

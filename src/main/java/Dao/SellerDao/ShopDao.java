@@ -1,25 +1,28 @@
 package Dao.SellerDao;
 
 import Entities.Sellers.Shop;
+import Entities.Sellers.VendingMachine;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 public class ShopDao {
-    private EntityManager em;
+    private static EntityManager em;
 
     public ShopDao(EntityManager em) {
         this.em = em;
     }
 
-    public void save(Shop shop){
+    public static void save(Shop shop){
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(shop);
         et.commit();
     }
 
-    public Shop getById(int id){
+    public static Shop getById(int id){
         return em.find(Shop.class, id);
     }
 
@@ -39,5 +42,10 @@ public class ShopDao {
     public void createShop(String address) {
         Shop shop = new Shop(address);
         save(shop);
+    }
+
+    public static List<Shop> getAllShops() {
+        TypedQuery<Shop> query = em.createQuery("SELECT s FROM Shops s", Shop.class);
+        return query.getResultList();
     }
 }
