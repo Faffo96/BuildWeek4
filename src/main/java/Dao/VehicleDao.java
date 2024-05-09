@@ -10,7 +10,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class VehicleDao {
-    private EntityManager em;
+    private static EntityManager em;
 
     public VehicleDao(EntityManager em) {
         this.em = em;
@@ -40,13 +40,13 @@ public class VehicleDao {
         et.commit();
     }
 
-    public List<Vehicle> getAvailableVehicles() {
+    public static List<Vehicle> getAvailableVehicles() {
         String jpql = "SELECT v FROM Vehicle v WHERE v.route IS NULL";
         TypedQuery<Vehicle> query = em.createQuery(jpql, Vehicle.class);
         return query.getResultList();
     }
 
-    public Vehicle checkVehicleAvailabilityByRoute(Route route) {
+    public static Vehicle checkVehicleAvailabilityByRoute(Route route) {
         String jpql = "SELECT v FROM Vehicle v WHERE v.route = :route";
         TypedQuery<Vehicle> query = em.createQuery(jpql, Vehicle.class);
         query.setParameter("route", route);
