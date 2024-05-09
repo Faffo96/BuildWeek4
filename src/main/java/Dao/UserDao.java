@@ -41,4 +41,8 @@ public class UserDao {
         User user = new User(name,surname);
         save(user);
     }
+
+    public void hopOnTheBus() {
+
+    }
 }

@@ -97,4 +97,11 @@ public class Vehicle {
     public void setVehicleState(List<VehicleState> vehicleState) {
         this.vehicleState = vehicleState;
     }
+
+    public boolean checkMaxCapacity() {
+        if (this.vehicleType == VehicleType.BUS && this.capacity >= 5) {
+            return true;
+        } else return this.vehicleType == VehicleType.TRAM && this.capacity >= 10;
+    }
+
 }

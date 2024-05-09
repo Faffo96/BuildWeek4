@@ -1,9 +1,12 @@
 package Dao;
 
 import Entities.Route;
+import Entities.Vehicle;
+import Entities.VehicleState;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 
 public class RouteDao {
     private EntityManager em;

@@ -52,5 +52,8 @@ public class Subscription extends Service{
         this.card = card;
     }
 
+    public boolean checkSubscriptionValidity() {
+        return expirationDate.isAfter(LocalDate.now());
+    }
 
 }

@@ -82,4 +82,9 @@ public class User {
                 ", subscription=" +
                 '}';
     }
+
+    public boolean checkUserCard(){
+        return card != null;
+    }
+
 }

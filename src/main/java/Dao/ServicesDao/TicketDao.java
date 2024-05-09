@@ -23,6 +23,13 @@ public class TicketDao {
         et.commit();
     }
 
+    public void update(Ticket element) {
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.merge(element);
+        et.commit();
+    }
+
     public Ticket getById(int id){
         return em.find(Ticket.class, id);
     }
@@ -78,6 +85,12 @@ public class TicketDao {
         }
     }
 
-
+    public void checkTicket(Ticket ticket) {
+        if (ticket.getUser() != null) {
+            ticket.setStampDate(LocalDate.now());
+            ticket.setValidity(false);
+            update(ticket);
+        }
+    }
 
 }

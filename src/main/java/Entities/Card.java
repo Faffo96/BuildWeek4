@@ -73,4 +73,8 @@ public class Card {
                 ", expireDate=" + expireDate +
                 '}';
     }
+
+    public boolean checkCardSubscription(){
+        return subscription != null;
+    }
 }
