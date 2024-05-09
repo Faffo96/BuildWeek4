@@ -10,10 +10,13 @@ import Entities.Services.Subscription;
 import Entities.Services.Ticket;
 import enums.SubscriptionDuration;
 import enums.VehicleType;
+import net.bytebuddy.asm.Advice;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.time.LocalDate;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -63,6 +66,50 @@ public class Main {
 
         VehicleState vehicleState1 = new VehicleState(true, vehicle2);
         vehicleStateDao.save(vehicleState1);*/
+
+
+    }
+
+    public void checkIn(User user, Route route) {
+
+        Vehicle vehicle = checkVehicleAvailabilityByRoute(route);
+        User user = user;
+
+        if (vehicle == null) {
+            List<Vehicle> availableVehicles = getAvailableVehicles();
+            if (availableVehicles.isEmpty()) {
+                System.out.println("No vehicles available on this route.");
+            }
+            vehicle = availableVehicles.get(0);
+        }
+
+        if (vehicle.checkMaxCapacity()) {
+            System.out.println("We are full, wait for another vehicle.");
+            return;
+        }
+
+
+        if (user.checkUserCard) {
+            // se true ha la card
+            Card card = user.getCard();
+            if (card.getSubscription() != null) {
+                Subscription subscription = card.getSubscription();
+                if (subscription.checkSubscriptionValidity()) {
+                    System.out.println("Welcome on board");
+                    vehicle.setUsersOnBoard(vehicle.getUsersOnBoard() + 1);
+                }
+            }
+        } else {
+            if (user.getTickets().isEmpty()){
+                System.out.println("Ticket/Subscription not found.");
+                return;
+            } else {
+                Ticket ticket = user.getTickets().get(0);
+                TicketDao.checkTicket(ticket);
+                System.out.println("Welcome on board");
+                vehicle.setUsersOnBoard(vehicle.getUsersOnBoard() + 1);
+            }
+        }
 
 
     }

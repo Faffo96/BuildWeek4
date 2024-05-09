@@ -1,6 +1,7 @@
 package Dao.SellerDao;
 
 import Entities.Sellers.Seller;
+import Entities.Services.Subscription;
 import Entities.Services.Ticket;
 import enums.VehicleType;
 
@@ -46,16 +47,36 @@ public class SellerDao {
     public Map<Seller, Integer> soldServices(LocalDate startDate, LocalDate endDate) {
         Map<Seller, Integer> soldServicesMap = new HashMap<>();
 
-        TypedQuery<Ticket> query = em.createQuery(
+        //ticket venduti nell'intervallo di tempo
+        TypedQuery<Ticket> ticketQuery = em.createQuery(
                 "SELECT t FROM Ticket t WHERE t.stampDate BETWEEN :startDate AND :endDate", Ticket.class);
-        query.setParameter("startDate", startDate);
-        query.setParameter("endDate", endDate);
+        ticketQuery.setParameter("startDate", startDate);
+        ticketQuery.setParameter("endDate", endDate);
 
-        List<Ticket> tickets = query.getResultList();
+        //abbonamenti venduti nell'intervallo di tempo
+        TypedQuery<Subscription> subscriptionQuery = em.createQuery(
+                "SELECT s FROM Subscription s WHERE s.purchaseDate BETWEEN :startDate AND :endDate", Subscription.class);
+        subscriptionQuery.setParameter("startDate", startDate);
+        subscriptionQuery.setParameter("endDate", endDate);
 
+        List<Ticket> tickets = ticketQuery.getResultList();
+        System.out.println("Ticket venduti:");
         for (Ticket ticket : tickets) {
             Seller seller = ticket.getSeller();
             soldServicesMap.put(seller, soldServicesMap.getOrDefault(seller, 0) + 1);
+        }
+
+        List<Subscription> subscriptions = subscriptionQuery.getResultList();
+        System.out.println("Sottoscrizioni vendute:");
+        for (Subscription subscription : subscriptions) {
+            Seller seller = subscription.getSeller();
+            soldServicesMap.put(seller, soldServicesMap.getOrDefault(seller, 0) + 1);
+        }
+
+        // stampa
+        System.out.println("Servizi venduti:");
+        for (Map.Entry<Seller, Integer> entry : soldServicesMap.entrySet()) {
+            System.out.println("Venditore: " + entry.getKey().getSellerId() + ", Servizi venduti: " + entry.getValue());
         }
 
         return soldServicesMap;
