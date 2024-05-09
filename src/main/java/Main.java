@@ -1,4 +1,5 @@
 import Dao.*;
+import Dao.SellerDao.SellerDao;
 import Dao.SellerDao.ShopDao;
 import Dao.SellerDao.VendingMachineDao;
 import Dao.ServicesDao.SubscriptionDao;
@@ -15,7 +16,9 @@ import enums.VehicleType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -54,7 +57,7 @@ public class Main {
                     createRouteAndAssignVehicle();
                     break;
                 case 8:
-                    modifyVehicleState();
+                    changeVehicleState();
                     break;
                 case 9:
                     printMaintenanceAndOperationPeriods();
@@ -351,15 +354,66 @@ public class Main {
     }
 
     private static void calculateTicketsAndSubscriptions() {
-        // calcola numero di ticket/subscription vendute da dato seller in dato periodo di tempo
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter start date (yyyy-MM-dd): ");
+        LocalDate startDate = LocalDate.parse(scanner.nextLine());
+
+        System.out.println("Enter end date (yyyy-MM-dd): ");
+        LocalDate endDate = LocalDate.parse(scanner.nextLine());
+
+        System.out.println("Select service type:");
+        System.out.println("1 - Ticket");
+        System.out.println("2 - Subscription");
+        System.out.println("3 - Both");
+        int serviceTypeChoice = scanner.nextInt();
+
+        System.out.println("Select seller type:");
+        System.out.println("1 - Shop");
+        System.out.println("2 - Vending Machine");
+        System.out.println("3 - Both");
+        int sellerTypeChoice = scanner.nextInt();
+
+        Map<Seller, Map<String, Integer>> soldServicesMap = SellerDao.soldServices(startDate, endDate, serviceTypeChoice, sellerTypeChoice);
+
+        // Stampa dei risultati
+        System.out.println("Services sold:");
+        for (Map.Entry<Seller, Map<String, Integer>> entry : soldServicesMap.entrySet()) {
+            Seller seller = entry.getKey();
+            Map<String, Integer> serviceCounts = entry.getValue();
+            System.out.println("Seller ID: " + seller.getSellerId());
+            for (Map.Entry<String, Integer> serviceEntry : serviceCounts.entrySet()) {
+                System.out.println("  " + serviceEntry.getKey() + ": " + serviceEntry.getValue());
+            }
+        }
     }
+
 
     private static void createRouteAndAssignVehicle() {
         // crea route e (opzionale?) assegnale vehicle
     }
 
-    private static void modifyVehicleState() {
-        // Cambia stato veicolo (manutenzione/operatività)
+    private static void changeVehicleState() {
+        List<Vehicle> allVehicles = VehicleDao.getAllVehicles();
+        System.out.println("Lista dei veicoli:");
+
+        for (Vehicle vehicle : allVehicles) {
+            System.out.println(vehicle.getVehicleId() + " - " + vehicle.getVehicleType() + " - STATO: " + VehicleStateDao.getVehicleState(vehicle));
+        }
+
+        System.out.print("Inserisci l'ID del veicolo di cui vuoi cambiare lo stato di manutenzione: ");
+        int vehicleId = scanner.nextInt();
+        scanner.nextLine();
+
+        Vehicle vehicle = VehicleDao.getById(vehicleId);
+        if (vehicle != null) {
+            boolean currentMaintenanceStatus = VehicleStateDao.getVehicleState(vehicle);
+            boolean newMaintenanceStatus = !currentMaintenanceStatus;
+            VehicleStateDao.updateVehicleMaintenanceStatus(vehicleId, newMaintenanceStatus);
+            System.out.println("Stato di manutenzione del veicolo " + vehicleId + " cambiato con successo.");
+        } else {
+            System.out.println("Veicolo non trovato.");
+        }
     }
 
     private static void printMaintenanceAndOperationPeriods() {
