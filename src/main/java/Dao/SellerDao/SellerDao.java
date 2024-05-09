@@ -26,6 +26,13 @@ public class SellerDao {
         et.commit();
     }
 
+    public void update(Seller element) {
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.merge(element);
+        et.commit();
+    }
+
     public Seller getById(int id){
         return em.find(Seller.class, id);
     }

@@ -24,6 +24,13 @@ public class SubscriptionDao {
         et.commit();
     }
 
+    public void update(Subscription element) {
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.merge(element);
+        et.commit();
+    }
+
     public Subscription getById(int id){
         return em.find(Subscription.class, id);
     }

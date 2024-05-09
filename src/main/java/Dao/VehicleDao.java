@@ -1,6 +1,7 @@
 package Dao;
 
 import Entities.Route;
+import Entities.Services.Ticket;
 import Entities.Vehicle;
 
 import javax.persistence.EntityManager;
@@ -20,6 +21,13 @@ public class VehicleDao {
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(vehicle);
+        et.commit();
+    }
+
+    public void update(Vehicle element) {
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.merge(element);
         et.commit();
     }
 

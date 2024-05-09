@@ -2,6 +2,7 @@ package Dao.SellerDao;
 
 import Entities.Sellers.Shop;
 import Entities.Sellers.VendingMachine;
+import Entities.Services.Ticket;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -17,6 +18,13 @@ public class VendingMachineDao {
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(vendingMachine);
+        et.commit();
+    }
+
+    public void update(VendingMachine element) {
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.merge(element);
         et.commit();
     }
 

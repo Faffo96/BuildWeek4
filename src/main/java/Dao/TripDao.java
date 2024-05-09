@@ -1,6 +1,7 @@
 package Dao;
 
 import Entities.Route;
+import Entities.Services.Ticket;
 import Entities.Trip;
 import Entities.Vehicle;
 
@@ -18,6 +19,13 @@ public class TripDao {
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(trip);
+        et.commit();
+    }
+
+    public void update(Trip element) {
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.merge(element);
         et.commit();
     }
 

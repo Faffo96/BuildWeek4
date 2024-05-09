@@ -1,6 +1,7 @@
 package Dao;
 
 import Entities.Card;
+import Entities.Services.Ticket;
 import Entities.User;
 
 import javax.persistence.EntityManager;
@@ -17,6 +18,13 @@ public class CardDao {
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(card);
+        et.commit();
+    }
+
+    public void update(Card element) {
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.merge(element);
         et.commit();
     }
 

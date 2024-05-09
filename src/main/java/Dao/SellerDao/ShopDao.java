@@ -1,6 +1,7 @@
 package Dao.SellerDao;
 
 import Entities.Sellers.Shop;
+import Entities.Services.Ticket;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -16,6 +17,13 @@ public class ShopDao {
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(shop);
+        et.commit();
+    }
+
+    public void update(Shop element) {
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.merge(element);
         et.commit();
     }
 

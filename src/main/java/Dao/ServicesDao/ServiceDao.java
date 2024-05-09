@@ -1,6 +1,7 @@
 package Dao.ServicesDao;
 
 import Entities.Services.Service;
+import Entities.Services.Ticket;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -16,6 +17,13 @@ public class ServiceDao {
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(service);
+        et.commit();
+    }
+
+    public void update(Service element) {
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.merge(element);
         et.commit();
     }
 
