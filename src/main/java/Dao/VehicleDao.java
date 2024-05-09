@@ -1,9 +1,11 @@
 package Dao;
 
+import Entities.Route;
 import Entities.Vehicle;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -43,4 +45,18 @@ public class VehicleDao {
         TypedQuery<Vehicle> query = em.createQuery(jpql, Vehicle.class);
         return query.getResultList();
     }
+
+    public Vehicle checkVehicleAvailabilityByRoute(Route route) {
+        String jpql = "SELECT v FROM Vehicle v WHERE v.route = :route";
+        TypedQuery<Vehicle> query = em.createQuery(jpql, Vehicle.class);
+        query.setParameter("route", route);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+
+
 }

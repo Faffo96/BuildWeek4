@@ -46,6 +46,4 @@ public class Ticket extends Service {
     public void setUser(User user) {
         this.user = user;
     }
-
-
 }

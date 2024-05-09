@@ -114,4 +114,5 @@ public class Vehicle {
             return true;
         } else return this.vehicleType == VehicleType.TRAM && this.usersOnBoard >= 10;
     }
+
 }
