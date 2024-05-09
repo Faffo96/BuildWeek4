@@ -5,22 +5,24 @@ import Entities.Sellers.VendingMachine;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 public class VendingMachineDao {
-    private EntityManager em;
+    private static EntityManager em;
 
     public VendingMachineDao(EntityManager em) {
         this.em = em;
     }
 
-    public void save(VendingMachine vendingMachine){
+    public static void save(VendingMachine vendingMachine){
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(vendingMachine);
         et.commit();
     }
 
-    public VendingMachine getById(int id){
+    public static VendingMachine getById(int id){
         return em.find(VendingMachine.class, id);
     }
 
@@ -40,5 +42,10 @@ public class VendingMachineDao {
     public void createVendingMachine(boolean operative) {
         VendingMachine vendingMachine = new VendingMachine(operative);
         save(vendingMachine);
+    }
+
+    public static List<VendingMachine> getAllVendingMachines() {
+        TypedQuery<VendingMachine> query = em.createQuery("SELECT vm FROM VendingMachine vm", VendingMachine.class);
+        return query.getResultList();
     }
 }

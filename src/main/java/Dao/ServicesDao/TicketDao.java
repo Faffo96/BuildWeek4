@@ -18,7 +18,7 @@ public class TicketDao {
         this.em = em;
     }
 
-    public void save(Ticket ticket){
+    public static void save(Ticket ticket){
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(ticket);

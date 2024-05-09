@@ -9,7 +9,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 
 public class RouteDao {
-    private EntityManager em;
+    private static EntityManager em;
 
     public RouteDao(EntityManager em) {
         this.em = em;
@@ -22,7 +22,7 @@ public class RouteDao {
         et.commit();
     }
 
-    public Route getById(int id){
+    public static Route getById(int id){
         return em.find(Route.class, id);
     }
 

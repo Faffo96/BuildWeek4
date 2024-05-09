@@ -15,14 +15,14 @@ public class UserDao {
         this.em = em;
     }
 
-    public void save(User user){
+    public static void save(User user){
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(user);
         et.commit();
     }
 
-    public User getById(int id){
+    public static User getById(int id){
         return em.find(User.class, id);
     }
 
