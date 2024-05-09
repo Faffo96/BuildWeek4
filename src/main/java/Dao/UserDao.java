@@ -1,12 +1,15 @@
 package Dao;
 
+import Entities.Services.Ticket;
 import Entities.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 public class UserDao {
-    private EntityManager em;
+    private static EntityManager em;
 
     public UserDao(EntityManager em) {
         this.em = em;
@@ -44,5 +47,11 @@ public class UserDao {
 
     public void hopOnTheBus() {
 
+    }
+
+    public static List<Ticket> getTicketsByUser(User user) {
+        TypedQuery<Ticket> query = em.createQuery("SELECT t FROM Ticket t WHERE t.user = :user", Ticket.class);
+        query.setParameter("user", user);
+        return query.getResultList();
     }
 }

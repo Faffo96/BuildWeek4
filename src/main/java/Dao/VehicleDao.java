@@ -50,12 +50,14 @@ public class VehicleDao {
         String jpql = "SELECT v FROM Vehicle v WHERE v.route = :route";
         TypedQuery<Vehicle> query = em.createQuery(jpql, Vehicle.class);
         query.setParameter("route", route);
+        query.setMaxResults(1); // Limita la query a restituire solo un risultato
         try {
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
     }
+
 
 
 

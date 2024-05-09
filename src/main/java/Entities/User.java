@@ -4,6 +4,7 @@ import Entities.Services.Subscription;
 import Entities.Services.Ticket;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,7 +31,9 @@ public class User {
     public User(String name, String lastName) {
         this.name = name;
         this.lastName = lastName;
+        this.tickets = new ArrayList<>();
     }
+
 
     public long getId() {
         return id;

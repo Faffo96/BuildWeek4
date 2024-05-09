@@ -10,12 +10,10 @@ import Entities.Services.Subscription;
 import Entities.Services.Ticket;
 import enums.SubscriptionDuration;
 import enums.VehicleType;
-import net.bytebuddy.asm.Advice;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.time.LocalDate;
 import java.util.List;
 
 public class Main {
@@ -33,7 +31,7 @@ public class Main {
         TripDao tripDao = new TripDao(em);
         VehicleStateDao vehicleStateDao = new VehicleStateDao(em);
 
-        /*Shop shop1 = new Shop("Via Roma");
+        Shop shop1 = new Shop("Via Roma");
         shopDao.save(shop1);
 
         VendingMachine vending1 = new VendingMachine(true);
@@ -65,12 +63,12 @@ public class Main {
         tripDao.save(trip1);
 
         VehicleState vehicleState1 = new VehicleState(true, vehicle2);
-        vehicleStateDao.save(vehicleState1);*/
+        vehicleStateDao.save(vehicleState1);
 
-
+        Main.checkIn(user1, route1);
     }
 
-    public void checkIn(User user, Route route) {
+    public static void checkIn(User user, Route route) {
 
         Vehicle vehicle = VehicleDao.checkVehicleAvailabilityByRoute(route);
 
@@ -94,22 +92,20 @@ public class Main {
             if (card.getSubscription() != null) {
                 Subscription subscription = card.getSubscription();
                 if (subscription.checkSubscriptionValidity()) {
-                    System.out.println("Welcome on board");
+                    System.out.println("Welcome on board!");
                     vehicle.setUsersOnBoard(vehicle.getUsersOnBoard() + 1);
                 }
             }
         } else {
-            if (user.getTickets().isEmpty()){
+            if (UserDao.getTicketsByUser(user).isEmpty()){
                 System.out.println("Ticket/Subscription not found.");
                 return;
             } else {
-                Ticket ticket = user.getTickets().get(0);
+                Ticket ticket = UserDao.getTicketsByUser(user).getFirst();
                 TicketDao.checkTicket(ticket);
                 System.out.println("Welcome on board");
                 vehicle.setUsersOnBoard(vehicle.getUsersOnBoard() + 1);
             }
         }
-
-
     }
 }
