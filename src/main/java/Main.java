@@ -72,11 +72,10 @@ public class Main {
 
     public void checkIn(User user, Route route) {
 
-        Vehicle vehicle = checkVehicleAvailabilityByRoute(route);
-        User user = user;
+        Vehicle vehicle = VehicleDao.checkVehicleAvailabilityByRoute(route);
 
         if (vehicle == null) {
-            List<Vehicle> availableVehicles = getAvailableVehicles();
+            List<Vehicle> availableVehicles = VehicleDao.getAvailableVehicles();
             if (availableVehicles.isEmpty()) {
                 System.out.println("No vehicles available on this route.");
             }
@@ -89,7 +88,7 @@ public class Main {
         }
 
 
-        if (user.checkUserCard) {
+        if (user.checkUserCard()) {
             // se true ha la card
             Card card = user.getCard();
             if (card.getSubscription() != null) {
