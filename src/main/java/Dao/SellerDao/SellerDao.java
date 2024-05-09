@@ -1,6 +1,7 @@
 package Dao.SellerDao;
 
 import Entities.Sellers.Seller;
+import Entities.Services.Service;
 import Entities.Services.Subscription;
 import Entities.Services.Ticket;
 import enums.VehicleType;
@@ -47,38 +48,42 @@ public class SellerDao {
     public Map<Seller, Integer> soldServices(LocalDate startDate, LocalDate endDate) {
         Map<Seller, Integer> soldServicesMap = new HashMap<>();
 
-        //ticket venduti nell'intervallo di tempo
-        TypedQuery<Ticket> ticketQuery = em.createQuery(
-                "SELECT t FROM Ticket t WHERE t.stampDate BETWEEN :startDate AND :endDate", Ticket.class);
-        ticketQuery.setParameter("startDate", startDate);
-        ticketQuery.setParameter("endDate", endDate);
+        TypedQuery<Service> serviceQuery = em.createQuery(
+                "SELECT s FROM Service s WHERE s.purchaseDate BETWEEN :startDate AND :endDate", Service.class);
+        serviceQuery.setParameter("startDate", startDate);
+        serviceQuery.setParameter("endDate", endDate);
 
-        //abbonamenti venduti nell'intervallo di tempo
-        TypedQuery<Subscription> subscriptionQuery = em.createQuery(
-                "SELECT s FROM Subscription s WHERE s.purchaseDate BETWEEN :startDate AND :endDate", Subscription.class);
-        subscriptionQuery.setParameter("startDate", startDate);
-        subscriptionQuery.setParameter("endDate", endDate);
-
-        List<Ticket> tickets = ticketQuery.getResultList();
-        System.out.println("Ticket venduti:");
-        for (Ticket ticket : tickets) {
-            Seller seller = ticket.getSeller();
-            soldServicesMap.put(seller, soldServicesMap.getOrDefault(seller, 0) + 1);
-        }
-
-        List<Subscription> subscriptions = subscriptionQuery.getResultList();
-        System.out.println("Sottoscrizioni vendute:");
-        for (Subscription subscription : subscriptions) {
-            Seller seller = subscription.getSeller();
-            soldServicesMap.put(seller, soldServicesMap.getOrDefault(seller, 0) + 1);
-        }
-
-        // stampa
+        List<Service> services = serviceQuery.getResultList();
         System.out.println("Servizi venduti:");
-        for (Map.Entry<Seller, Integer> entry : soldServicesMap.entrySet()) {
-            System.out.println("Venditore: " + entry.getKey().getSellerId() + ", Servizi venduti: " + entry.getValue());
+        for (Service service : services) {
+            Seller seller = service.getSeller();
+            soldServicesMap.put(seller, soldServicesMap.getOrDefault(seller, 0) + 1);
         }
+        // stampa
+        for (Map.Entry<Seller, Integer> entry : soldServicesMap.entrySet()) {
+            Seller seller = entry.getKey();
 
+            int ticketsSold = 0;
+            int subscriptionsSold = 0;
+
+            TypedQuery<Service> ciao = em.createQuery(
+                    "SELECT s FROM Service s WHERE s.seller = :seller AND s.purchaseDate BETWEEN :startDate AND :endDate", Service.class);
+            ciao.setParameter("seller", seller);
+            ciao.setParameter("startDate", startDate);
+            ciao.setParameter("endDate", endDate);
+            List<Service> servicesSoldBySeller = ciao.getResultList();
+            for (Service service : servicesSoldBySeller) {
+                if (service instanceof Ticket) {
+                    ticketsSold++;
+                } else if (service instanceof Subscription) {
+                    subscriptionsSold++;
+                }
+            }
+
+            System.out.println("Venditore: " + seller.getSellerId());
+            System.out.println("  Biglietti venduti: " + ticketsSold);
+            System.out.println("  Abbonamenti venduti: " + subscriptionsSold);
+        }
         return soldServicesMap;
     }
 }
