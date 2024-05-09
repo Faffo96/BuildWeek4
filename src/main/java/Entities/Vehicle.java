@@ -32,10 +32,13 @@ public class Vehicle {
     @OneToMany
     private List<VehicleState> vehicleState;
 
+    private int usersOnBoard;
+
     public Vehicle(int capacity, VehicleType vehicleType, Route route) {
         this.capacity = capacity;
         this.vehicleType = vehicleType;
         this.route = route;
+        this.usersOnBoard = 0;
     }
 
     public Vehicle(){
@@ -98,10 +101,18 @@ public class Vehicle {
         this.vehicleState = vehicleState;
     }
 
+    public int getUsersOnBoard() {
+        return usersOnBoard;
+    }
+
+    public void setUsersOnBoard(int usersOnBoard) {
+        this.usersOnBoard = usersOnBoard;
+    }
+
     public boolean checkMaxCapacity() {
-        if (this.vehicleType == VehicleType.BUS && this.capacity >= 5) {
+        if (this.vehicleType == VehicleType.BUS && this.usersOnBoard >= 5) {
             return true;
-        } else return this.vehicleType == VehicleType.TRAM && this.capacity >= 10;
+        } else return this.vehicleType == VehicleType.TRAM && this.usersOnBoard >= 10;
     }
 
 }
