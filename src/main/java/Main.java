@@ -293,10 +293,22 @@ public class Main {
         Card card = user.getCard();
 
 
-        System.out.println("Choose subscription duration (1 for Weekly, 2 for Monthly): ");
-        int durationChoice = scanner.nextInt();
+        System.out.println("Choose subscription duration: ");
+        System.out.println("1. Weekly");
+        System.out.println("2. Monthly");
+        int subscriptionDurationInt = scanner.nextInt();
         scanner.nextLine();
-        SubscriptionDuration duration = (durationChoice == 1) ? SubscriptionDuration.WEEKLY : SubscriptionDuration.MONTHLY;
+        SubscriptionDuration subscriptionDuration;
+        if (subscriptionDurationInt == 1) {
+            subscriptionDuration = SubscriptionDuration.WEEKLY;
+        } else if (subscriptionDurationInt == 2) {
+            subscriptionDuration = SubscriptionDuration.MONTHLY;
+        } else {
+            System.out.println("Wrong choice.");
+            Main.displayMenu();
+            return;
+        }
+
 
         System.out.println("Choose a seller (1 for Shop, 2 for Vending Machine): ");
         int sellerType = scanner.nextInt();
@@ -468,7 +480,56 @@ public class Main {
 
 
     private void createRouteAndAssignVehicle() {
-        // crea route e (opzionale?) assegnale vehicle
+        System.out.println("Creating a new Route...");
+        System.out.println("Enter start location:");
+        scanner.nextLine();
+        String startLocation = scanner.nextLine();
+        System.out.println("Enter end location");
+        String endLocation = scanner.nextLine();
+        System.out.println("Enter duration (in minutes)");
+        int duration = scanner.nextInt();
+        scanner.nextLine();
+
+
+        Route route = new Route(startLocation, endLocation, duration);
+
+
+        System.out.println("Do you want to choose a vehicle for this route? Y/N");
+        String assignVehicleChoice = scanner.nextLine();
+
+        if (assignVehicleChoice.equalsIgnoreCase("Y")) {
+            System.out.println("Choose a vehicle for this route");
+            List<Vehicle> availableVehicles = VehicleDao.getAvailableVehicles();
+            if (availableVehicles.isEmpty()) {
+                System.out.println("No vehicles available.");
+            } else {
+                System.out.println("Vehicles available:");
+                for (Vehicle vehicle : availableVehicles) {
+                    System.out.println("Vehicle type: " + vehicle.getVehicleType() + " - " + "Vehicle ID: " + vehicle.getVehicleId());
+                }
+                System.out.println("Enter vehicle ID:");
+                int vehicleId = scanner.nextInt();
+                scanner.nextLine();
+
+                Vehicle selectedVehicle = null;
+                for (Vehicle vehicle : availableVehicles) {
+                    if (vehicle.getVehicleId() == vehicleId) {
+                        selectedVehicle = vehicle;
+                        break;
+                    }
+                }
+
+                if (selectedVehicle == null) {
+                    System.out.println("Invalid vehicle ID. No Vehicle assigned to this route.");
+                } else {
+                    selectedVehicle.setRoute(route);
+                    System.out.println("Vehicle with ID " + selectedVehicle.getVehicleId() + " assigned to Route " + route.getRouteId() + ".");
+                }
+            }
+        }
+
+        routeDao.save(route);
+        System.out.println("Route created successfully.");
     }
 
     private void changeVehicleState() {
@@ -476,26 +537,42 @@ public class Main {
         System.out.println("Lista dei veicoli:");
 
         for (Vehicle vehicle : allVehicles) {
-            System.out.println(vehicle.getVehicleId() + " - " + vehicle.getVehicleType() + " - STATO: " + VehicleStateDao.getVehicleState(vehicle));
+            System.out.println(vehicle.getVehicleId() + " - " + vehicle.getVehicleType() + " - STATO: " + vehicleStateDao.getVehicleState(vehicle));
         }
 
         System.out.print("Inserisci l'ID del veicolo di cui vuoi cambiare lo stato di manutenzione: ");
         int vehicleId = scanner.nextInt();
         scanner.nextLine();
 
-        Vehicle vehicle = VehicleDao.getById(vehicleId);
-        if (vehicle != null) {
-            boolean currentMaintenanceStatus = VehicleStateDao.getVehicleState(vehicle);
-            boolean newMaintenanceStatus = !currentMaintenanceStatus;
-            VehicleStateDao.updateVehicleMaintenanceStatus(vehicleId, newMaintenanceStatus);
+
+            vehicleStateDao.updateVehicleMaintenanceStatus(vehicleId);
             System.out.println("Stato di manutenzione del veicolo " + vehicleId + " cambiato con successo.");
-        } else {
-            System.out.println("Veicolo non trovato.");
-        }
+
     }
 
     private void printMaintenanceAndOperationPeriods() {
-        // Stampa periodi di manutenzione/operatività
+        System.out.println("Enter vehicle ID:");
+        int vehicleId = scanner.nextInt();
+        scanner.nextLine();
+
+        Vehicle vehicle = VehicleDao.getById(vehicleId);
+        if (vehicle == null) {
+            System.out.println("Vehicle not found.");
+            return;
+        }
+
+        List<VehicleState> operationalPeriods = vehicleStateDao.getOperationalPeriodsByVehicleId(vehicleId);
+        List<VehicleState> maintenancePeriods = vehicleStateDao.getMaintenancePeriodsByVehicleId(vehicleId);
+
+        System.out.println("Operational Periods for Vehicle ID " + vehicleId + ":");
+        for (VehicleState period : operationalPeriods) {
+            System.out.println("Start Date: " + period.getStartState() + " - End Date: " + period.getEndState());
+        }
+
+        System.out.println("Maintenance Periods for Vehicle ID " + vehicleId + ":");
+        for (VehicleState period : maintenancePeriods) {
+            System.out.println("Start Date: " + period.getStartState() + " - End Date: " + period.getEndState());
+        }
     }
 
     private void vehicleDeparture() {
@@ -507,8 +584,30 @@ public class Main {
     }
 
     private void calculateStampedTickets() {
-        // Calcola ticket timbrati
+        scanner.nextLine();
+        System.out.println("Calculating stamped tickets...");
+        System.out.println("Enter start date (yyyy-MM-dd): ");
+        String startDateStr = scanner.nextLine();
+        System.out.println("Enter end date (yyyy-MM-dd): ");
+        String endDateStr = scanner.nextLine();
+        System.out.println("Enter vehicle ID (optional, press Enter to skip): ");
+        String vehicleIdStr = scanner.nextLine();
+
+        try {
+            LocalDate startDate = LocalDate.parse(startDateStr);
+            LocalDate endDate = LocalDate.parse(endDateStr);
+            Integer vehicleId = null;
+            if (!vehicleIdStr.isEmpty()) {
+                vehicleId = Integer.parseInt(vehicleIdStr);
+            }
+
+            int stampedTickets = ticketDao.checkStampedTickets(startDate, endDate, vehicleId);
+            System.out.println("Number of stamped tickets: " + stampedTickets);
+        } catch (Exception e) {
+            System.out.println("Invalid input. Please enter dates in the format yyyy-MM-dd and vehicle ID as an integer.");
+        }
     }
+
 
     private void checkIn(User user, Route route) {
 
@@ -534,7 +633,7 @@ public class Main {
             if (card.getSubscription() != null) {
                 Subscription subscription = card.getSubscription();
                 if (subscription.checkSubscriptionValidity()) {
-                    System.out.println("Welcome on board!");
+                    System.out.println("Your subscription is valid: welcome on board!");
                     vehicle.setUsersOnBoard(vehicle.getUsersOnBoard() + 1);
                 }
             }

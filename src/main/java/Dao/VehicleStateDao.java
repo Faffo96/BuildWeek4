@@ -1,5 +1,6 @@
 package Dao;
 
+import Entities.Services.Ticket;
 import Entities.Vehicle;
 import Entities.VehicleState;
 
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class VehicleStateDao {
-    private static EntityManager em;
+    private EntityManager em;
 
     public VehicleStateDao(EntityManager em) {
         this.em = em;
@@ -20,6 +21,13 @@ public class VehicleStateDao {
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(vehicleState);
+        et.commit();
+    }
+
+    public void update(VehicleState element) {
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.merge(element);
         et.commit();
     }
 
@@ -63,34 +71,26 @@ public class VehicleStateDao {
         return query.getResultList();
     }
 
-    public void updateVehicleMaintenanceStatus(int vehicleId, boolean underMaintenance) {
-        EntityTransaction et = null;
-        try {
-            et = em.getTransaction();
-            et.begin();
-
-            // Query per selezionare l'ultimo stato del veicolo
-            TypedQuery<VehicleState> query = em.createQuery("SELECT vs FROM VehicleState vs WHERE vs.vehicle = :vehicleId", VehicleState.class);
+    public void updateVehicleMaintenanceStatus(int vehicleId) {
+            TypedQuery<VehicleState> query = em.createQuery("SELECT vs FROM VehicleState vs WHERE vs.vehicle.vehicleId = :vehicleId ORDER BY vs.startState DESC", VehicleState.class);
             query.setParameter("vehicleId", vehicleId);
-            query.setMaxResults(1); // Limita la query a un solo risultato (il più recente)
             List<VehicleState> results = query.getResultList();
-            Vehicle vehicle = VehicleDao.getById(vehicleId);
+        System.out.println(results);
             if (!results.isEmpty()) {
-                VehicleState vehicleState = results.get(0);
+                VehicleState vehicleState = results.get(results.size() - 1);
+                boolean currentMaintenanceState = vehicleState.isUnderMaintenance();
+                boolean newMaintenanceStatus =!currentMaintenanceState;
+
                 vehicleState.setEndState(LocalDate.now());
-                em.merge(vehicleState);
-                save(new VehicleState(underMaintenance, vehicle));
-                et.commit();
+                update(vehicleState);
+                VehicleState vehicleState1 = new VehicleState(newMaintenanceStatus, vehicleState.getVehicle());
+                save(vehicleState1);
             } else {
                 System.out.println("Id del veicolo non trovato o nessuno stato trovato per il veicolo: " + vehicleId);
             }
-        } catch (Exception e) {
-            if (et != null && et.isActive()) {
-                et.rollback();
-            }
-            e.printStackTrace(); // Stampa l'eccezione per diagnosticare il problema
-        }
+
     }
+
 
 
     public void updateEndDate(int vehicleId, LocalDate endDate) {
@@ -121,7 +121,7 @@ public class VehicleStateDao {
     }
 
 
-    public static boolean getVehicleState(Vehicle vehicle) {
+    public boolean getVehicleState(Vehicle vehicle) {
         String jpql = "SELECT vs.underMaintenance FROM VehicleState vs " +
                 "WHERE vs.vehicle = :vehicle " +
                 "ORDER BY vs.startState DESC";

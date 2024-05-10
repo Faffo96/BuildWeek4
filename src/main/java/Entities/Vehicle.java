@@ -120,4 +120,17 @@ public class Vehicle {
         } else return this.vehicleType == VehicleType.TRAM && this.usersOnBoard >= 10;
     }
 
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "vehicleId=" + vehicleId +
+                ", capacity=" + capacity +
+                ", vehicleType=" + vehicleType +
+                ", ticket=" + ticket +
+                ", route=" + route +
+                ", trips=" + trips +
+                ", vehicleState=" + vehicleState +
+                ", usersOnBoard=" + usersOnBoard +
+                '}';
+    }
 }

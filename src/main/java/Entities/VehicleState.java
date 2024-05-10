@@ -72,5 +72,14 @@ public class VehicleState {
         this.vehicle = vehicle;
     }
 
-
+    @Override
+    public String toString() {
+        return "VehicleState{" +
+                "vehicleStateId=" + vehicleStateId +
+                ", underMaintenance=" + underMaintenance +
+                ", startState=" + startState +
+                ", endState=" + endState +
+                ", vehicle=" + vehicle +
+                '}';
+    }
 }

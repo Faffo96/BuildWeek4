@@ -1,6 +1,7 @@
 package Dao;
 
 import Entities.Route;
+import Entities.Services.Ticket;
 import Entities.Vehicle;
 
 import javax.persistence.EntityManager;
@@ -20,6 +21,13 @@ public class VehicleDao {
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(vehicle);
+        et.commit();
+    }
+
+    public void update(Vehicle element) {
+        EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.merge(element);
         et.commit();
     }
 
@@ -50,7 +58,7 @@ public class VehicleDao {
         String jpql = "SELECT v FROM Vehicle v WHERE v.route = :route";
         TypedQuery<Vehicle> query = em.createQuery(jpql, Vehicle.class);
         query.setParameter("route", route);
-        query.setMaxResults(1); // Limita la query a restituire solo un risultato
+        query.setMaxResults(1);
         try {
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -59,7 +67,7 @@ public class VehicleDao {
     }
 
     public static List<Vehicle> getAllVehicles() {
-        String jpql = "SELECT v FROM Vehicle";
+        String jpql = "SELECT v FROM Vehicle v";
         TypedQuery<Vehicle> query = em.createQuery(jpql, Vehicle.class);
         return query.getResultList();
     }
