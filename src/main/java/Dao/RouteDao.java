@@ -7,6 +7,7 @@ import Entities.VehicleState;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 public class RouteDao {
     private static EntityManager em;
@@ -38,4 +39,10 @@ public class RouteDao {
         }
         et.commit();
     }
+
+    public List<Route> getAllRoutes() {
+        TypedQuery<Route> query = em.createQuery("SELECT r FROM Route r", Route.class);
+        return query.getResultList();
+    }
+
 }

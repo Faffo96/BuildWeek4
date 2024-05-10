@@ -18,6 +18,8 @@ import enums.VehicleType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.xml.transform.Source;
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -89,6 +91,9 @@ public class Main {
                 case 12:
                     main.calculateStampedTickets();
                     break;
+                case 13:
+                    main.createVehicle();
+                    break;
                 case 0:
                     exit = true;
                     break;
@@ -114,6 +119,7 @@ public class Main {
         System.out.println("10 - Vehicle Departure (new Trip)");
         System.out.println("11 - Calculate number of Trips of a specific Vehicle on each Route and its total travel time");
         System.out.println("12 - Calculate number of stamped Tickets in a given time period or on a specific Vehicle");
+        System.out.println("13 - Create a vehicle");
         System.out.println("0 - Exit");
     }
 
@@ -330,7 +336,7 @@ public class Main {
             return;
         }
 
-        Subscription subscription = new Subscription(seller, duration, card);
+        Subscription subscription = new Subscription(seller, subscriptionDuration, card);
 
 
         subscriptionDao.save(subscription);
@@ -411,6 +417,55 @@ public class Main {
         }
     }
 
+    private void createVehicle() {
+        System.out.println("New Vehicle creation:");
+        System.out.println("What's the vehicle's type?");
+        System.out.println("1. BUS");
+        System.out.println("2. TRAM");
+        int vehicleInt = scanner.nextInt();
+        VehicleType vehicleType;
+        if (vehicleInt == 1) {
+            vehicleType = VehicleType.BUS;
+        } else if (vehicleInt == 2) {
+            vehicleType = VehicleType.TRAM;
+        } else {
+            System.out.println("Wrong choice.");
+            Main.displayMenu();
+            return;
+        }
+
+        System.out.println("Do you want to assign a Route to this vehicle? Y/N");
+        scanner.nextLine();
+        String assignRouteChoice = scanner.nextLine();
+
+        Route route = null;
+
+        if (assignRouteChoice.equalsIgnoreCase("Y")) {
+            List<Route> routes = routeDao.getAllRoutes();
+            if (routes.isEmpty()) {
+                System.out.println("No routes available");
+            } else {
+                for (Route r : routes) {
+                    System.out.println("Route ID: " + r.getRouteId() + " - " + "Da " + r.getStartLocation() + " a " + r.getEndLocation() + ".");
+                }
+                System.out.println("Choose a route (ID): ");
+                int routeId = scanner.nextInt();
+                scanner.nextLine();
+                route = RouteDao.getById(routeId);
+            }
+        }
+
+        if (route != null) {
+            Vehicle vehicle = new Vehicle(vehicleType, route);
+            vehicleDao.save(vehicle);
+            vehicleStateDao.save(new VehicleState(false, vehicle));
+        } else {
+            Vehicle vehicle = new Vehicle(vehicleType, null);
+            vehicleDao.save(vehicle);
+            vehicleStateDao.save(new VehicleState(false, vehicle));
+        }
+    }
+
 
     private void createRouteAndAssignVehicle() {
         // crea route e (opzionale?) assegnale vehicle
@@ -484,7 +539,7 @@ public class Main {
                 }
             }
         } else {
-            if (UserDao.getTicketsByUser(user).isEmpty()){
+            if (UserDao.getTicketsByUser(user).isEmpty()) {
                 System.out.println("Ticket/Subscription not found.");
                 return;
             } else {

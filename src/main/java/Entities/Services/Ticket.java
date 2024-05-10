@@ -31,6 +31,16 @@ public class Ticket extends Service {
     public Ticket() {
     }
 
+    @Override
+    public boolean isValidity() {
+        return validity;
+    }
+
+    @Override
+    public void setValidity(boolean validity) {
+        this.validity = validity;
+    }
+
     public LocalDate getStampDate() {
         return stampDate;
     }

@@ -71,4 +71,6 @@ public class VehicleState {
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
+
+
 }

@@ -9,7 +9,7 @@ import java.util.List;
 public class Route {
     @Id
     @GeneratedValue
-    private Long routeId;
+    private int routeId;
 
     @Column(name = "start_location")
     private String startLocation;
@@ -31,11 +31,11 @@ public class Route {
 
     }
 
-    public Long getRouteId() {
+    public int getRouteId() {
         return routeId;
     }
 
-    public void setRouteId(Long routeId) {
+    public void setRouteId(int routeId) {
         this.routeId = routeId;
     }
 

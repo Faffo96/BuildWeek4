@@ -32,10 +32,15 @@ public class Vehicle {
     @OneToMany
     private List<VehicleState> vehicleState;
 
+    @Column(name = "users_on_board")
     private int usersOnBoard;
 
-    public Vehicle(int capacity, VehicleType vehicleType, Route route) {
-        this.capacity = capacity;
+    public Vehicle(VehicleType vehicleType, Route route) {
+        if (vehicleType == VehicleType.BUS) {
+            this.capacity = 5;
+        } else if (vehicleType == VehicleType.TRAM) {
+            this.capacity = 10;
+        }
         this.vehicleType = vehicleType;
         this.route = route;
         this.usersOnBoard = 0;

@@ -12,7 +12,9 @@ import java.time.LocalDate;
 @Table(name = "subscriptions")
 public class Subscription extends Service{
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
+    @Column(name = "subscription_duration")
+
     private SubscriptionDuration subscriptionDuration;
 
     @OneToOne (mappedBy = "subscription")
