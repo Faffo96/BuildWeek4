@@ -32,6 +32,7 @@ public class Trip {
         this.route = route;
         this.duration = duration;
         this.startTrip = LocalDateTime.now();
+        this.endTrip = this.startTrip.plus(duration);
     }
 
     public Trip() {
