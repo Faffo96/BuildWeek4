@@ -20,6 +20,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.xml.transform.Source;
 import java.sql.SQLOutput;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -175,7 +176,7 @@ public class Main {
         int userId = scanner.nextInt();
         scanner.nextLine();
 
-        User user = UserDao.getById(userId);
+        User user = userDao.getById(userId);
         if (user == null) {
             System.out.println("User not found.");
             return;
@@ -214,7 +215,7 @@ public class Main {
         int userId = (int) scanner.nextLong();
         scanner.nextLine();
 
-        User user = UserDao.getById(userId);
+        User user = userDao.getById(userId);
         if (user == null) {
             System.out.println("User not found.");
             return;
@@ -272,7 +273,7 @@ public class Main {
         long userId = scanner.nextLong();
         scanner.nextLine();
 
-        User user = UserDao.getById((int) userId);
+        User user = userDao.getById((int) userId);
         if (user == null) {
             System.out.println("User not found.");
             return;
@@ -374,7 +375,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter user ID:");
         long userId = scanner.nextLong();
-        User user = UserDao.getById((int) userId);
+        User user = userDao.getById((int) userId);
         if (user == null) {
             System.out.println("User not found.");
             return null;
@@ -417,7 +418,6 @@ public class Main {
 
         Map<Seller, Map<String, Integer>> soldServicesMap = SellerDao.soldServices(startDate, endDate, serviceTypeChoice, sellerTypeChoice);
 
-        // Stampa dei risultati
         System.out.println("Services sold:");
         for (Map.Entry<Seller, Map<String, Integer>> entry : soldServicesMap.entrySet()) {
             Seller seller = entry.getKey();
@@ -499,7 +499,7 @@ public class Main {
 
         if (assignVehicleChoice.equalsIgnoreCase("Y")) {
             System.out.println("Choose a vehicle for this route");
-            List<Vehicle> availableVehicles = VehicleDao.getAvailableVehicles();
+            List<Vehicle> availableVehicles = vehicleDao.getAvailableVehicles();
             if (availableVehicles.isEmpty()) {
                 System.out.println("No vehicles available.");
             } else {
@@ -533,7 +533,7 @@ public class Main {
     }
 
     private void changeVehicleState() {
-        List<Vehicle> allVehicles = VehicleDao.getAllVehicles();
+        List<Vehicle> allVehicles = vehicleDao.getAllVehicles();
         System.out.println("Lista dei veicoli:");
 
         for (Vehicle vehicle : allVehicles) {
@@ -555,7 +555,7 @@ public class Main {
         int vehicleId = scanner.nextInt();
         scanner.nextLine();
 
-        Vehicle vehicle = VehicleDao.getById(vehicleId);
+        Vehicle vehicle = vehicleDao.getById(vehicleId);
         if (vehicle == null) {
             System.out.println("Vehicle not found.");
             return;
@@ -576,8 +576,47 @@ public class Main {
     }
 
     private void vehicleDeparture() {
-        // Fai partire il veicolo (e quindi il trip?)
+        System.out.println("Start a trip!");
+        System.out.println("Enter Vehicle ID:");
+        int vehicleId = scanner.nextInt();
+        scanner.nextLine();
+
+        Vehicle vehicle = vehicleDao.getById(vehicleId);
+        if (vehicle == null) {
+            System.out.println("Vehicle not found.");
+            return;
+        }
+
+        System.out.println("Inserisci l'ID della Route:");
+        int routeId = scanner.nextInt();
+        scanner.nextLine();
+
+        Route route = routeDao.getById(routeId);
+        if (route == null) {
+            System.out.println("Route not found.");
+            return;
+        }
+
+        vehicle.setRoute(route);
+        vehicle.setUsersOnBoard(0);
+
+        int baseDuration = route.getDuration();
+        int usersDuration = vehicle.getUsersOnBoard() * 20;
+        int tenPercentOfBaseDuration = baseDuration / 10;
+        int randomFactor = (int) (Math.random() * 2) - 1;
+        int adjustedRandomFactor = randomFactor * tenPercentOfBaseDuration;
+        int totalDurationInSeconds = baseDuration + usersDuration + adjustedRandomFactor;
+
+        Duration totalDuration = Duration.ofSeconds(totalDurationInSeconds);
+        long totalDurationInMinutes = totalDuration.toMinutes();
+
+        Trip trip = new Trip(vehicle, route, Duration.ofMinutes(totalDurationInMinutes));
+        tripDao.createTrip(vehicle, route, Duration.ofMinutes(totalDurationInMinutes));
+        System.out.println("Viaggio iniziato per il veicolo con ID " + vehicleId + " sul percorso con ID " + routeId + ". Durata totale: " + totalDurationInMinutes + " minuti.");
     }
+
+
+
 
     private void calculateTripNumbersAndTotalTravelTime() {
         // calcola numero viaggi e tempo totale di viaggio per veicolo
@@ -611,10 +650,10 @@ public class Main {
 
     private void checkIn(User user, Route route) {
 
-        Vehicle vehicle = VehicleDao.checkVehicleAvailabilityByRoute(route);
+        Vehicle vehicle = vehicleDao.checkVehicleAvailabilityByRoute(route);
 
         if (vehicle == null) {
-            List<Vehicle> availableVehicles = VehicleDao.getAvailableVehicles();
+            List<Vehicle> availableVehicles = vehicleDao.getAvailableVehicles();
             if (availableVehicles.isEmpty()) {
                 System.out.println("No vehicles available on this route.");
             }
@@ -638,11 +677,11 @@ public class Main {
                 }
             }
         } else {
-            if (UserDao.getTicketsByUser(user).isEmpty()) {
+            if (userDao.getTicketsByUser(user).isEmpty()) {
                 System.out.println("Ticket/Subscription not found.");
                 return;
             } else {
-                Ticket ticket = UserDao.getTicketsByUser(user).getFirst();
+                Ticket ticket = userDao.getTicketsByUser(user).getFirst();
                 ticketDao.checkTicket(ticket);
                 System.out.println("Welcome on board");
                 vehicle.setUsersOnBoard(vehicle.getUsersOnBoard() + 1);
@@ -650,3 +689,10 @@ public class Main {
         }
     }
 }
+
+
+
+
+
+
+

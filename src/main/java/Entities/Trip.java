@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class Trip {
     @Id
     @GeneratedValue
-    private Long tripId;
+    private int tripId;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id")
@@ -24,24 +24,24 @@ public class Trip {
     private Duration duration;
 
     @OneToOne
-    @JoinColumn (name = "route_id")
+    @JoinColumn(name = "route_id")
     private Route route;
 
-    public Trip(Vehicle vehicle, Route route) {
+    public Trip(Vehicle vehicle, Route route, Duration duration) {
         this.vehicle = vehicle;
-        this.startTrip = LocalDateTime.now();
         this.route = route;
+        this.duration = duration;
+        this.startTrip = LocalDateTime.now();
     }
 
-    public Trip(){
-
+    public Trip() {
     }
 
-    public Long getTripId() {
+    public int getTripId() {
         return tripId;
     }
 
-    public void setTripId(Long tripId) {
+    public void setTripId(int tripId) {
         this.tripId = tripId;
     }
 
@@ -84,4 +84,6 @@ public class Trip {
     public void setRoute(Route route) {
         this.route = route;
     }
+
+
 }
