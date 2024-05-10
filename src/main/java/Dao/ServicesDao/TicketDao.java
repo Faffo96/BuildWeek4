@@ -73,14 +73,14 @@ public class TicketDao {
 
     public static int checkStampedTickets(LocalDate startDate, LocalDate endDate, Integer vehicleId) {
         if (vehicleId != null) {
-            Query query = em.createQuery("SELECT COUNT(t) FROM Ticket t JOIN t.vehicle v WHERE v.vehicleId = :vehicleId AND t.stampDate BETWEEN :startDate AND :endDate");
+            Query query = em.createQuery("SELECT COUNT(t) FROM Ticket t WHERE t.vehicle.vehicleId = :vehicleId AND t.stampDate BETWEEN :startDate AND :endDate");
             query.setParameter("vehicleId", vehicleId);
             query.setParameter("startDate", startDate);
             query.setParameter("endDate", endDate);
             return ((int) query.getSingleResult());
         }
         else {
-            Query query = em.createQuery("SELECT COUNT(t) FROM Tickets t WHERE t.stampdate BETWEEN :startDate AND :endDate");
+            Query query = em.createQuery("SELECT COUNT(t) FROM Ticket t WHERE t.stampDate BETWEEN :startDate AND :endDate");
             query.setParameter("startDate", startDate);
             query.setParameter("endDate", endDate);
             return ((int) query.getSingleResult());
