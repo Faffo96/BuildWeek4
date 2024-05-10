@@ -669,22 +669,20 @@ public class Main {
         System.out.println("Enter end date (yyyy-MM-dd): ");
         String endDateStr = scanner.nextLine();
         System.out.println("Enter vehicle ID (optional, press Enter to skip): ");
-        String vehicleIdStr = scanner.nextLine();
-
-        try {
-            LocalDate startDate = LocalDate.parse(startDateStr);
-            LocalDate endDate = LocalDate.parse(endDateStr);
-            Integer vehicleId = null;
-            if (!vehicleIdStr.isEmpty()) {
-                vehicleId = Integer.parseInt(vehicleIdStr);
-            }
-
-            int stampedTickets = ticketDao.checkStampedTickets(startDate, endDate, vehicleId);
-            System.out.println("Number of stamped tickets: " + stampedTickets);
-        } catch (Exception e) {
-            System.out.println("Invalid input. Please enter dates in the format yyyy-MM-dd and vehicle ID as an integer.");
+        String vehicleIdInput = scanner.nextLine();
+        Integer vehicleId = null;
+        if (!vehicleIdInput.isEmpty()) {
+            vehicleId = Integer.parseInt(vehicleIdInput);
         }
+        LocalDate startDate = LocalDate.parse(startDateStr);
+        LocalDate endDate = LocalDate.parse(endDateStr);
+
+        int stampedTickets = ticketDao.checkStampedTickets(startDate, endDate, vehicleId);
+        System.out.println("Number of stamped tickets: " + stampedTickets);
     }
+
+
+
 
 
     private void checkIn(User user, Route route) {
