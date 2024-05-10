@@ -13,7 +13,7 @@ public class CardDao {
         this.em = em;
     }
 
-    public static void save(Card card){
+    public void save(Card card){
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(card);

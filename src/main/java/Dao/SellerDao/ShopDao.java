@@ -15,7 +15,7 @@ public class ShopDao {
         this.em = em;
     }
 
-    public static void save(Shop shop){
+    public void save(Shop shop){
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(shop);

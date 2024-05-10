@@ -18,14 +18,14 @@ public class TicketDao {
         this.em = em;
     }
 
-    public static void save(Ticket ticket){
+    public void save(Ticket ticket){
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(ticket);
         et.commit();
     }
 
-    public static void update(Ticket element) {
+    public void update(Ticket element) {
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.merge(element);
@@ -87,7 +87,7 @@ public class TicketDao {
         }
     }
 
-    public static void checkTicket(Ticket ticket) {
+    public void checkTicket(Ticket ticket) {
         if (ticket.getUser() != null) {
             ticket.setStampDate(LocalDate.now());
             ticket.setValidity(false);

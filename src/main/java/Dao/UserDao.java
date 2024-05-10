@@ -15,7 +15,7 @@ public class UserDao {
         this.em = em;
     }
 
-    public static void save(User user){
+    public void save(User user){
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(user);

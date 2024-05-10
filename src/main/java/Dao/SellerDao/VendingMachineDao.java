@@ -15,7 +15,7 @@ public class VendingMachineDao {
         this.em = em;
     }
 
-    public static void save(VendingMachine vendingMachine){
+    public void save(VendingMachine vendingMachine){
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(vendingMachine);

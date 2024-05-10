@@ -17,7 +17,7 @@ public class SubscriptionDao {
         this.em = em;
     }
 
-    public static void save(Subscription subscription){
+    public void save(Subscription subscription){
         EntityTransaction et = em.getTransaction();
         et.begin();
         em.persist(subscription);
