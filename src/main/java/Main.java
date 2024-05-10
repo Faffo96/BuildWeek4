@@ -22,6 +22,7 @@ import javax.xml.transform.Source;
 import java.sql.SQLOutput;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -619,8 +620,46 @@ public class Main {
 
 
     private void calculateTripNumbersAndTotalTravelTime() {
-        // calcola numero viaggi e tempo totale di viaggio per veicolo
+        System.out.println("Choose an operation:");
+        System.out.println("1. Calculate the number of trips of a specific vehicle within a specified time frame");
+        System.out.println("2. Calculate the total travel time of a vehicle and the average actual travel time of its trips");
+
+        int operation = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (operation) {
+            case 1:
+                System.out.println("Enter the vehicle ID:");
+                int vehicleId = scanner.nextInt();
+                scanner.nextLine();
+
+                System.out.println("Enter the start of the time frame (format YYYY-MM-DD HH:MM):");
+                String startDateStr = scanner.nextLine();
+                LocalDateTime startDate = LocalDateTime.parse(startDateStr);
+
+                System.out.println("Enter the end of the time frame (format YYYY-MM-DD HH:MM):");
+                String endDateStr = scanner.nextLine();
+                LocalDateTime endDate = LocalDateTime.parse(endDateStr);
+
+                int tripCount = tripDao.countTripsByVehicle(vehicleId, startDate, endDate);
+                System.out.println("Number of trips in the specified period: " + tripCount);
+                break;
+
+            case 2:
+                System.out.println("Enter the vehicle ID:");
+                vehicleId = scanner.nextInt();
+                scanner.nextLine();
+
+                double averageDuration = tripDao.averageTripDuration(vehicleId);
+                System.out.println("Total travel time: " + averageDuration + " minutes");
+                break;
+
+            default:
+                System.out.println("Invalid option.");
+                break;
+        }
     }
+
 
     private void calculateStampedTickets() {
         scanner.nextLine();
