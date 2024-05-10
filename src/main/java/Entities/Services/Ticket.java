@@ -5,6 +5,7 @@ import Dao.UserDao;
 import Entities.Route;
 import Entities.Sellers.Seller;
 import Entities.User;
+import Entities.Vehicle;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -20,6 +21,10 @@ public class Ticket extends Service {
     @ManyToOne
     @JoinColumn (name = "user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "vehicle_id")
+    private Vehicle vehicle;
 
     private boolean validity = true;
 
