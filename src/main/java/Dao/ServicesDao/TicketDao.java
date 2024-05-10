@@ -80,6 +80,7 @@ public class TicketDao {
             query.setParameter("endDate", endDate);
             return ((Number) query.getSingleResult()).intValue();
         } else {
+
             Query query = em.createQuery("SELECT COUNT(t) FROM Ticket t WHERE t.stampDate BETWEEN :startDate AND :endDate");
             query.setParameter("startDate", startDate);
             query.setParameter("endDate", endDate);
