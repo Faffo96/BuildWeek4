@@ -9,7 +9,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class UserDao {
-    private static EntityManager em;
+    private EntityManager em;
 
     public UserDao(EntityManager em) {
         this.em = em;
@@ -22,7 +22,7 @@ public class UserDao {
         et.commit();
     }
 
-    public static User getById(int id){
+    public User getById(int id){
         return em.find(User.class, id);
     }
 
@@ -49,7 +49,7 @@ public class UserDao {
 
     }
 
-    public static List<Ticket> getTicketsByUser(User user) {
+    public List<Ticket> getTicketsByUser(User user) {
         TypedQuery<Ticket> query = em.createQuery("SELECT t FROM Ticket t WHERE t.user = :user", Ticket.class);
         query.setParameter("user", user);
         return query.getResultList();

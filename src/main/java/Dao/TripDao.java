@@ -6,6 +6,7 @@ import Entities.Vehicle;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.time.Duration;
 
 public class TripDao {
     private EntityManager em;
@@ -30,7 +31,7 @@ public class TripDao {
         et.begin();
         Trip trip = getById(id);
 
-        if (trip != null){
+        if (trip!= null){
             em.remove(trip);
         } else {
             System.out.println("Viaggio non trovato");
@@ -38,8 +39,8 @@ public class TripDao {
         et.commit();
     }
 
-    public void createTrip(Vehicle vehicle, Route route){
-        Trip trip = new Trip(vehicle,route);
-        save(trip);
+    public void createTrip(Vehicle vehicle, Route route, Duration duration){
+        Trip trip = new Trip(vehicle, route, duration);
+        em.persist(trip);
     }
 }
