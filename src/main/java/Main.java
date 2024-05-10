@@ -1,14 +1,15 @@
-/*
 import Dao.*;
 import Dao.SellerDao.SellerDao;
 import Dao.SellerDao.ShopDao;
 import Dao.SellerDao.VendingMachineDao;
+import Dao.ServicesDao.ServiceDao;
 import Dao.ServicesDao.SubscriptionDao;
 import Dao.ServicesDao.TicketDao;
 import Entities.*;
 import Entities.Sellers.Seller;
 import Entities.Sellers.Shop;
 import Entities.Sellers.VendingMachine;
+import Entities.Services.Service;
 import Entities.Services.Subscription;
 import Entities.Services.Ticket;
 import enums.SubscriptionDuration;
@@ -25,20 +26,24 @@ import java.util.Scanner;
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
+    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("bus");
+    static EntityManager em = emf.createEntityManager();
+
+    static ShopDao shopDao = new ShopDao(em);
+    static SellerDao sellerDao = new SellerDao(em);
+    static VendingMachineDao vendingMachineDao = new VendingMachineDao(em);
+    static ServiceDao serviceDao = new ServiceDao(em);
+    static SubscriptionDao subscriptionDao = new SubscriptionDao(em);
+    static TicketDao ticketDao = new TicketDao(em);
+    static CardDao cardDao = new CardDao(em);
+    static RouteDao routeDao = new RouteDao(em);
+    static TripDao tripDao = new TripDao(em);
+    static UserDao userDao = new UserDao(em);
+    static VehicleDao vehicleDao = new VehicleDao(em);
+    static VehicleStateDao vehicleStateDao = new VehicleStateDao(em);
 
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("bus");
-        EntityManager em = emf.createEntityManager();
 
-        ShopDao shopDao = new ShopDao(em);
-        SellerDao sellerDao = new SellerDao(em);
-        VendingMachineDao vendingMachineDao = new VendingMachineDao(em);
-        CardDao cardDao = new CardDao(em);
-        RouteDao routeDao = new RouteDao(em);
-        TripDao tripDao = new TripDao(em);
-        UserDao userDao = new UserDao(em);
-        VehicleDao vehicleDao = new VehicleDao(em);
-        VehicleStateDao vehicleStateDao = new VehicleStateDao(em);
 
         boolean exit = false;
 
@@ -90,6 +95,7 @@ public class Main {
             }
         }
         System.out.println("Program terminated.");
+
     }
 
     private static void displayMenu() {
@@ -119,17 +125,16 @@ public class Main {
         System.out.println("Enter seller type (1 for Shop, 2 for Vending Machine): ");
         int type = scanner.nextInt();
         scanner.nextLine();
-        Seller seller = null;
         if (type == 1) {
-            seller = new Shop();
-            */
-/*ShopDao.save((Shop) seller);*//*
-
+            System.out.println("What's the shop's address?");
+            String shopData = scanner.nextLine();
+            Shop shop = new Shop(shopData);
+            shopDao.save(shop);
         } else if (type == 2) {
             System.out.println("Enter vending machine state (true/false): ");
             boolean operative = scanner.nextBoolean();
-            seller = new VendingMachine(operative);
-            VendingMachineDao.save((VendingMachine) seller);
+            VendingMachine vendingMachine = new VendingMachine(operative);
+            vendingMachineDao.save(vendingMachine);
         } else {
             System.out.println("Invalid choice.");
             return;
@@ -148,7 +153,7 @@ public class Main {
 
         User user = new User(name, lastName);
 
-        UserDao.save(user);
+        userDao.save(user);
 
         System.out.println("User created successfully.");
     }
@@ -172,7 +177,7 @@ public class Main {
 
         Card card = new Card(user);
 
-        CardDao.save(card);
+        cardDao.save(card);
 
         System.out.println("Card created successfully.");
     }
@@ -245,7 +250,7 @@ public class Main {
         Ticket ticket = new Ticket(seller, user);
 
 
-        TicketDao.save(ticket);
+        ticketDao.save(ticket);
 
         System.out.println("Ticket purchased successfully.");
     }
@@ -323,7 +328,7 @@ public class Main {
         Subscription subscription = new Subscription(seller, duration, card);
 
 
-        SubscriptionDao.save(subscription);
+        subscriptionDao.save(subscription);
 
         System.out.println("Subscription purchased successfully.");
     }
@@ -479,11 +484,10 @@ public class Main {
                 return;
             } else {
                 Ticket ticket = UserDao.getTicketsByUser(user).getFirst();
-                TicketDao.checkTicket(ticket);
+                ticketDao.checkTicket(ticket);
                 System.out.println("Welcome on board");
                 vehicle.setUsersOnBoard(vehicle.getUsersOnBoard() + 1);
             }
         }
     }
 }
-*/
