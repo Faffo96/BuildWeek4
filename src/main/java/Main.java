@@ -674,7 +674,6 @@ public class Main {
         if (!vehicleIdInput.isEmpty()) {
             vehicleId = Integer.parseInt(vehicleIdInput);
         }
-
         LocalDate startDate = LocalDate.parse(startDateStr);
         LocalDate endDate = LocalDate.parse(endDateStr);
 
