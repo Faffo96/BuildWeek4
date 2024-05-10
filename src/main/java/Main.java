@@ -26,21 +26,23 @@ import java.util.Scanner;
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("bus");
-    static EntityManager em = emf.createEntityManager();
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("bus");
+    EntityManager em = emf.createEntityManager();
 
-    static ShopDao shopDao = new ShopDao(em);
-    static SellerDao sellerDao = new SellerDao(em);
-    static VendingMachineDao vendingMachineDao = new VendingMachineDao(em);
-    static ServiceDao serviceDao = new ServiceDao(em);
-    static SubscriptionDao subscriptionDao = new SubscriptionDao(em);
-    static TicketDao ticketDao = new TicketDao(em);
-    static CardDao cardDao = new CardDao(em);
-    static RouteDao routeDao = new RouteDao(em);
-    static TripDao tripDao = new TripDao(em);
-    static UserDao userDao = new UserDao(em);
-    static VehicleDao vehicleDao = new VehicleDao(em);
-    static VehicleStateDao vehicleStateDao = new VehicleStateDao(em);
+    ShopDao shopDao = new ShopDao(em);
+    SellerDao sellerDao = new SellerDao(em);
+    VendingMachineDao vendingMachineDao = new VendingMachineDao(em);
+    ServiceDao serviceDao = new ServiceDao(em);
+    SubscriptionDao subscriptionDao = new SubscriptionDao(em);
+    TicketDao ticketDao = new TicketDao(em);
+    CardDao cardDao = new CardDao(em);
+    RouteDao routeDao = new RouteDao(em);
+    TripDao tripDao = new TripDao(em);
+    UserDao userDao = new UserDao(em);
+    VehicleDao vehicleDao = new VehicleDao(em);
+    VehicleStateDao vehicleStateDao = new VehicleStateDao(em);
+
+    static Main main = new Main();
 
     public static void main(String[] args) {
 
@@ -52,40 +54,40 @@ public class Main {
             int choice = getChoice();
             switch (choice) {
                 case 1:
-                    createSeller();
+                    main.createSeller();
                     break;
                 case 2:
-                    createUser();
+                    main.createUser();
                     break;
                 case 3:
-                    buyCard();
+                    main.buyCard();
                     break;
                 case 4:
-                    buyService();
+                    main.buyService();
                     break;
                 case 5:
-                    checkInUser();
+                    main.checkInUser();
                     break;
                 case 6:
-                    calculateTicketsAndSubscriptions();
+                    main.calculateTicketsAndSubscriptions();
                     break;
                 case 7:
-                    createRouteAndAssignVehicle();
+                    main.createRouteAndAssignVehicle();
                     break;
                 case 8:
-                    changeVehicleState();
+                    main.changeVehicleState();
                     break;
                 case 9:
-                    printMaintenanceAndOperationPeriods();
+                    main.printMaintenanceAndOperationPeriods();
                     break;
                 case 10:
-                    vehicleDeparture();
+                    main.vehicleDeparture();
                     break;
                 case 11:
-                    calculateTripNumbersAndTotalTravelTime();
+                    main.calculateTripNumbersAndTotalTravelTime();
                     break;
                 case 12:
-                    calculateStampedTickets();
+                    main.calculateStampedTickets();
                     break;
                 case 0:
                     exit = true;
@@ -120,7 +122,7 @@ public class Main {
         return scanner.nextInt();
     }
 
-    private static void createSeller() {
+    private void createSeller() {
         scanner.nextLine();
         System.out.println("Creating a new seller...");
         System.out.println("Enter seller type (1 for Shop, 2 for Vending Machine): ");
@@ -145,7 +147,7 @@ public class Main {
     }
 
 
-    private static void createUser() {
+    private void createUser() {
         scanner.nextLine();
         System.out.println("Creating a new user...");
         System.out.println("Enter user name: ");
@@ -160,7 +162,7 @@ public class Main {
         System.out.println("User created successfully.");
     }
 
-    private static void buyCard() {
+    private void buyCard() {
         scanner.nextLine();
         System.out.println("Creating a new card...");
         System.out.println("Enter user ID: ");
@@ -185,7 +187,7 @@ public class Main {
         System.out.println("Card created successfully.");
     }
 
-    private static void buyService() {
+    private void buyService() {
         System.out.println("Buying a new service...");
         System.out.println("Choose service type (1 for Ticket, 2 for Subscription): ");
         int serviceType = scanner.nextInt();
@@ -200,10 +202,10 @@ public class Main {
         }
     }
 
-    private static void buyTicket() {
+    private void buyTicket() {
         System.out.println("Buying a new ticket...");
         System.out.println("Enter user ID: ");
-        int userId = scanner.nextInt();
+        int userId = (int) scanner.nextLong();
         scanner.nextLine();
 
         User user = UserDao.getById(userId);
@@ -258,7 +260,7 @@ public class Main {
         System.out.println("Ticket purchased successfully.");
     }
 
-    private static void buySubscription() {
+    private void buySubscription() {
         System.out.println("Buying a new subscription...");
         System.out.println("Enter user ID: ");
         long userId = scanner.nextLong();
@@ -336,7 +338,7 @@ public class Main {
         System.out.println("Subscription purchased successfully.");
     }
 
-    private static void checkInUser() {
+    private void checkInUser() {
         User user = selectUser();
         if (user == null) {
             return;
@@ -350,7 +352,7 @@ public class Main {
         checkIn(user, route);
     }
 
-    public static User selectUser() {
+    public User selectUser() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter user ID:");
         long userId = scanner.nextLong();
@@ -362,7 +364,7 @@ public class Main {
         return user;
     }
 
-    public static Route selectRoute() {
+    public Route selectRoute() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter route ID:");
         long routeId = scanner.nextLong();
@@ -374,7 +376,7 @@ public class Main {
         return route;
     }
 
-    private static void calculateTicketsAndSubscriptions() {
+    private void calculateTicketsAndSubscriptions() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Enter start date (yyyy-MM-dd): ");
@@ -410,11 +412,11 @@ public class Main {
     }
 
 
-    private static void createRouteAndAssignVehicle() {
+    private void createRouteAndAssignVehicle() {
         // crea route e (opzionale?) assegnale vehicle
     }
 
-    private static void changeVehicleState() {
+    private void changeVehicleState() {
         List<Vehicle> allVehicles = VehicleDao.getAllVehicles();
         System.out.println("Lista dei veicoli:");
 
@@ -437,23 +439,23 @@ public class Main {
         }
     }
 
-    private static void printMaintenanceAndOperationPeriods() {
+    private void printMaintenanceAndOperationPeriods() {
         // Stampa periodi di manutenzione/operatività
     }
 
-    private static void vehicleDeparture() {
+    private void vehicleDeparture() {
         // Fai partire il veicolo (e quindi il trip?)
     }
 
-    private static void calculateTripNumbersAndTotalTravelTime() {
+    private void calculateTripNumbersAndTotalTravelTime() {
         // calcola numero viaggi e tempo totale di viaggio per veicolo
     }
 
-    private static void calculateStampedTickets() {
+    private void calculateStampedTickets() {
         // Calcola ticket timbrati
     }
 
-    private static void checkIn(User user, Route route) {
+    private void checkIn(User user, Route route) {
 
         Vehicle vehicle = VehicleDao.checkVehicleAvailabilityByRoute(route);
 
