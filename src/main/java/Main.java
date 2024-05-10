@@ -121,6 +121,7 @@ public class Main {
     }
 
     private static void createSeller() {
+        scanner.nextLine();
         System.out.println("Creating a new seller...");
         System.out.println("Enter seller type (1 for Shop, 2 for Vending Machine): ");
         int type = scanner.nextInt();
@@ -145,6 +146,7 @@ public class Main {
 
 
     private static void createUser() {
+        scanner.nextLine();
         System.out.println("Creating a new user...");
         System.out.println("Enter user name: ");
         String name = scanner.nextLine();
@@ -159,12 +161,13 @@ public class Main {
     }
 
     private static void buyCard() {
+        scanner.nextLine();
         System.out.println("Creating a new card...");
         System.out.println("Enter user ID: ");
-        long userId = scanner.nextLong();
+        int userId = scanner.nextInt();
         scanner.nextLine();
 
-        User user = UserDao.getById((int) userId);
+        User user = UserDao.getById(userId);
         if (user == null) {
             System.out.println("User not found.");
             return;
@@ -200,10 +203,10 @@ public class Main {
     private static void buyTicket() {
         System.out.println("Buying a new ticket...");
         System.out.println("Enter user ID: ");
-        long userId = scanner.nextLong();
+        int userId = scanner.nextInt();
         scanner.nextLine();
 
-        User user = UserDao.getById((int) userId);
+        User user = UserDao.getById(userId);
         if (user == null) {
             System.out.println("User not found.");
             return;

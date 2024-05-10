@@ -45,7 +45,7 @@ public class ShopDao {
     }
 
     public static List<Shop> getAllShops() {
-        TypedQuery<Shop> query = em.createQuery("SELECT s FROM Shops s", Shop.class);
+        TypedQuery<Shop> query = em.createQuery("SELECT s FROM Shop s", Shop.class);
         return query.getResultList();
     }
 }
