@@ -15,7 +15,7 @@ public class MainTest {
     public static void main(String[] args) {
         User user = new User();
 
-        UserDao.getById(7);
+
 
     }
 

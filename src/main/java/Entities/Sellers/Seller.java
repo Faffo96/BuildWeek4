@@ -11,7 +11,6 @@ public abstract class Seller {
     @JoinColumn(name = "seller_id")
     protected int sellerId;
 
-
     public Seller(){
 
     }

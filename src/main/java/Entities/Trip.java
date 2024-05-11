@@ -27,6 +27,12 @@ public class Trip {
     @JoinColumn(name = "route_id")
     private Route route;
 
+    /*@Column(name = "validated_ticket_qty")
+    private int validatedTicketQty;
+
+    @Column(name = "validated_subscription_qty")
+    private int validatedSubscriptionsQty;*/
+
     public Trip(Vehicle vehicle, Route route, Duration duration) {
         this.vehicle = vehicle;
         this.route = route;
